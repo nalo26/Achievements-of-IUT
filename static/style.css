@@ -19,7 +19,7 @@
 
 body {
 	font-family: "Exo 2";
-	background: var(--bg);
+	background: var(--main-color);
 	font-size: 15px;
-	color: var(--font);
+	color: var(--text);
 }
