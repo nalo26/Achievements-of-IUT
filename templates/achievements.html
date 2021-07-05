@@ -1,7 +1,9 @@
 <head>
-    <title>Achievements list</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <title>[IUT RPG] {{ achievements[category]['name'] }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div>{{achievements}}</div>
+    {% include "navbar.html" %}
+
+    <div class="achievements">{{ achievements }}</div>
 </body>

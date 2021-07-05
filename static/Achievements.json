@@ -1,6 +1,6 @@
 [
     {   "name": "1ère année",
-        "alternates": ["1ère_année", "1a"],
+        "aliases": ["1ère_année", "1a"],
         "lore": "Tous les défis de la première année !",
         "difficulty": 1,
         "childs": [
@@ -99,7 +99,7 @@
         ]
     },
     {   "name": "2ème année",
-        "alternates": ["2ème_année", "2a"],
+        "aliases": ["2ème_année", "2a"],
         "lore": "Tous les défis de la deuxième année !",
         "difficulty": 2,
         "childs": [
@@ -168,7 +168,7 @@
         ]
     },
     {   "name": "Achievements globaux",
-        "alternates": ["achievements_globaux", "globaux", "global", "général", "généraux"],
+        "aliases": ["achievements_globaux", "globaux", "global", "général", "généraux"],
         "lore": "Tous les défis impossibles à placer spécifiquement.",
         "difficulty": 3,
         "childs": [
@@ -325,7 +325,7 @@
         ]
     },
     {   "name": "Spéciaux profs",
-        "alternates": ["spéciaux_profs", "profs", "prof", "professeurs", "professeur", "enseignants", "enseignant"],
+        "aliases": ["spéciaux_profs", "profs", "prof", "professeurs", "professeur", "enseignants", "enseignant"],
         "lore": "Tous les défis liés aux profs directement.",
         "difficulty": 3,
         "childs": [
@@ -443,7 +443,7 @@
         ]
     },
     {   "name": "Spéciaux distanciel",
-        "alternates": ["spéciaux_distanciel", "distanciel", "distance", "teletravail"],
+        "aliases": ["spéciaux_distanciel", "distanciel", "distance", "teletravail"],
         "lore": "Tous les défis à effectuer lors des cours à distance.",
         "difficulty": 3,
         "childs": [

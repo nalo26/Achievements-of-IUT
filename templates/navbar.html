@@ -1,0 +1,10 @@
+<nav id="navbar">
+    <li class="active"><a href="/achievements">Achievements</a>
+        <ul>
+            {% for a in achievements %}
+                <li><a href="/achievements/{{ loop.index }}">{{ a['name'] }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li style="float:right"><a href="/leaderboard">Leaderboard</a></li>
+</nav>
