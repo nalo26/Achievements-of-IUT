@@ -1,0 +1,30 @@
+:root {
+    --main-color: #1C2433;
+    --secondary-color: #141B26;
+    --light-link: #2f3847;
+    --dark-link: #0f141d;
+    --text: #ffffff;
+    --difficulty-1: #6AA84F;
+    --difficulty-2: #4A86EF;
+    --difficulty-3: #E69137;
+    --difficulty-4: #970000;
+    --difficulty-5: #674EA7;
+    /* --difficulty-5: #000000; */
+}
+
+@font-face {
+	font-family: "Exo 2";
+	src: url("Exo2-Regular.otf");
+}
+
+body {
+	font-family: "Exo 2";
+	background: var(--main-color);
+	font-size: 15px;
+	color: var(--text);
+}
+
+.achievements {
+	margin-top: 70px;
+    margin-left: 200px;
+}

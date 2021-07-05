@@ -1,9 +1,21 @@
 <head>
     <title>[IUT RPG] {{ achievements[category]['name'] }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}">
 </head>
+
 <body>
+    <div class="sidebar">
+        {% for a in achievements %}
+            <li><a href="/achievements/{{ loop.index-1 }}">{{ a['name'] }}</a></li>
+        {% endfor %}
+    </div>
+    
     {% include "navbar.html" %}
 
-    <div class="achievements">{{ achievements }}</div>
+    <div class="achievements">
+        {# {{ achievements }} #}
+        arbre soon tkt
+    </div>
 </body>

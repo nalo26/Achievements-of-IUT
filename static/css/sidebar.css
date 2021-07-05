@@ -1,0 +1,43 @@
+.sidebar {
+    background-color: var(--secondary-color);
+    height: 100%; 
+    top: 0;
+    left: 0;
+    position: fixed;
+    list-style: none;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.sidebar li {
+    display: block;
+    width: 100%;
+}
+
+.sidebar a {
+    text-decoration: none;
+    display: block;
+    color: var(--text);
+    padding: 14px 16px;
+}
+
+.sidebar a:hover {
+    background-color: var(--light-link);
+    transition-duration: 0.4s;
+}
+
+.sidebar a:not(hover) {
+    transition-duration: 0.4s;
+}
+
+.sidebar li:hover ul {
+    background-color: var(--secondary-color);
+    display: block;
+}
+
+.active {
+	background-color: var(--dark-link);
+}
