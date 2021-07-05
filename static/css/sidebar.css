@@ -21,7 +21,7 @@
     text-decoration: none;
     display: block;
     color: var(--text);
-    padding: 14px 16px;
+    padding: 30px 16px;
 }
 
 .sidebar a:hover {

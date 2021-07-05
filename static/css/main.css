@@ -14,7 +14,7 @@
 
 @font-face {
 	font-family: "Exo 2";
-	src: url("Exo2-Regular.otf");
+	src: url("../Exo2-Regular.otf");
 }
 
 body {
@@ -24,7 +24,7 @@ body {
 	color: var(--text);
 }
 
-.achievements {
+.tree {
 	margin-top: 70px;
     margin-left: 200px;
 }
