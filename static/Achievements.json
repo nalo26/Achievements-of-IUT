@@ -354,27 +354,27 @@
                         "difficulty": 4,
                         "childs": [
                             {
-                                "name": "On verra ça plus tard",
+                                "name": "\"On verra ça plus tard\"",
                                 "lore": "\"On verra ça plus tard\"",
                                 "difficulty": 1
                             },
                             {
-                                "name": "Alors, ça ping ?",
+                                "name": "\"Alors, ça ping ?\"",
                                 "lore": "\"Alors, ça ping ?\"",
                                 "difficulty": 2
                             },
                             {
-                                "name": "J'aime quand vous parlez comme ça",
+                                "name": "\"J'aime quand vous parlez comme ça\"",
                                 "lore": "\"J'aime quand vous parlez comme ça\"",
                                 "difficulty": 3
                             },
                             {
-                                "name": "C'est facile, vous savez faire",
+                                "name": "\"C'est facile, vous savez faire\"",
                                 "lore": "\"C'est facile, vous savez faire\"",
                                 "difficulty": 3
                             },
                             {
-                                "name": "Personne ne sort avant 1/2 heure",
+                                "name": "\"Personne ne sort avant 1/2 heure\"",
                                 "lore": "\"Personne ne sort avant 1/2 heure\"",
                                 "difficulty": 4
                             }
@@ -417,22 +417,22 @@
                         "difficulty": 4,
                         "childs": [
                             {
-                                "name": "Un p'tit appeeeeeeeel",
+                                "name": "\"Un p'tit appeeeeeeeel\"",
                                 "lore": "\"Un p'tit appeeeeeeeel\"",
                                 "difficulty": 1
                             },
                             {
-                                "name": "Vous sortez vos polycop'",
+                                "name": "\"Vous sortez vos polycop'\"",
                                 "lore": "\"Vous sortez vos polycop'\"",
                                 "difficulty": 1
                             },
                             {
-                                "name": "Vous sortez vos PCG",
+                                "name": "\"Vous sortez vos PCG\"",
                                 "lore": "\"Vous sortez vos PCG\" (ou \"Plans Comptables\")",
                                 "difficulty": 2
                             },
                             {
-                                "name": "[prénom] ? Il est pas la [prénom] ?",
+                                "name": "\"[prénom] ? Il est pas la [prénom] ?\"",
                                 "lore": "\"[prénom] ? Il est pas la [prénom] ?\" (où [prénom] désigne une personne quelconque)",
                                 "difficulty": 4
                             }

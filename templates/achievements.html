@@ -19,10 +19,10 @@
 
     </div>
     <script>
-        var tree_div = document.querySelector(".tree-div");
-        var tree = document.createElement("ul");
+        var canvas = document.querySelector(".tree-div");
+        var tree = document.createElement("div");
         tree.className = "tree";
-        tree_div.appendChild(tree);
+        canvas.appendChild(tree);
         var achievements = {{ achievements[category].childs | safe }};
         tree_builder(achievements, tree);
 
@@ -30,21 +30,24 @@
             for(let i in achievements) {
                 let a = achievements[i];
 
-                let li = document.createElement("li");
+                let entry = document.createElement("div");
+                entry.className = "entry";
 
-                let span = document.createElement("span");
+                let label = document.createElement("span");
+                label.className = "label";
                 let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
-                span.style.borderColor = color;
-                span.innerHTML = a.name;
+                label.style.borderColor = color;
+                label.innerHTML = a.name;
                 
-                li.appendChild(span);
-                parent_node.appendChild(li);
+                entry.appendChild(label);
+                parent_node.appendChild(entry);
 
                 if(typeof a.childs !== 'undefined') {
-                    let ul = document.createElement("ul");
-                    li.appendChild(ul);
-                    tree_builder(a.childs, ul);
-                }
+                    let next = document.createElement("div");
+                    next.className = "branch";
+                    entry.appendChild(next);
+                    tree_builder(a.childs, next);
+                } //else entry.classList.add("sole");
             }
         }
     </script>
