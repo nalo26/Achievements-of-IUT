@@ -16,24 +16,36 @@
     {% include "navbar.html" %}
 
     <div class="tree-div">
-        <ul class="tree">
-            {% for a in achievements[category].childs %}
-                <li><span style="border-color: var(--difficulty-{{ a.difficulty }});">{{ a.name }}</span>
-                    <ul>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                        <li><span>test</span></li>
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
+
     </div>
     <script>
-        var tree = document.querySelector(".tree");
-        var achievements = JSON.parse("{{ achievements[category].childs }}");
+        var tree_div = document.querySelector(".tree-div");
+        var tree = document.createElement("ul");
+        tree.className = "tree";
+        tree_div.appendChild(tree);
+        var achievements = {{ achievements[category].childs | safe }};
+        tree_builder(achievements, tree);
+
+        function tree_builder(achievements, parent_node) {
+            for(let i in achievements) {
+                let a = achievements[i];
+
+                let li = document.createElement("li");
+
+                let span = document.createElement("span");
+                let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
+                span.style.borderColor = color;
+                span.innerHTML = a.name;
+                
+                li.appendChild(span);
+                parent_node.appendChild(li);
+
+                if(typeof a.childs !== 'undefined') {
+                    let ul = document.createElement("ul");
+                    li.appendChild(ul);
+                    tree_builder(a.childs, ul);
+                }
+            }
+        }
     </script>
 </body>
