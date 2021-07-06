@@ -15,9 +15,25 @@
     
     {% include "navbar.html" %}
 
-    <div class="tree">
-        {% for a in achievements[category].childs %}
-            <li><div class="leaf" style="border-color: var(--difficulty-{{ a.difficulty }});">{{ a.name }}</div></li>
-        {% endfor %}
+    <div class="tree-div">
+        <ul class="tree">
+            {% for a in achievements[category].childs %}
+                <li><span style="border-color: var(--difficulty-{{ a.difficulty }});">{{ a.name }}</span>
+                    <ul>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                        <li><span>test</span></li>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
+    <script>
+        var tree = document.querySelector(".tree");
+        var achievements = JSON.parse("{{ achievements[category].childs }}");
+    </script>
 </body>
