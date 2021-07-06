@@ -17,7 +17,7 @@
 
     <div class="tree">
         {% for a in achievements[category].childs %}
-            <li><div class="leaf">{{ a.name }}</div></li>
+            <li><div class="leaf" style="border-color: var(--difficulty-{{ a.difficulty }});">{{ a.name }}</div></li>
         {% endfor %}
     </div>
 </body>

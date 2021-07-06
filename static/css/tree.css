@@ -1,10 +1,11 @@
 .tree {
+    margin: 20px;
+    grid-column: 2;
+    grid-row: 2;
     list-style: none;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-around;
 }
 
 .tree li {
@@ -12,8 +13,11 @@
 }
 
 .leaf {
+    text-align: center;
     display: block;
     width: 150;
     height: 50;
-    border: 1px solid white;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 5px;
 }

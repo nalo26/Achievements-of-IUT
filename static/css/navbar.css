@@ -1,23 +1,17 @@
 .navbar, .navbar ul {
-    padding: 0;
-    margin: 0;
     list-style: none;
-    position: fixed;
 }
 
 .navbar {
     background: var(--secondary-color);
-    width: 100%;
-    top: 0;
-    left: 0;
+    grid-column: 1 / 3;
+    grid-row: 1;
+    height: fit-content;
 }
 
 .navbar li {
     display: inline-block;
-}
-
-.navbar ul li {
-    display: inherit;
+    height: 100%;
 }
 
 .navbar a {

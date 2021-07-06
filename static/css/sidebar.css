@@ -1,15 +1,13 @@
 .sidebar {
+    grid-column: 1;
+    grid-row: 1 / 3;
     background-color: var(--secondary-color);
-    height: 100%; 
-    top: 0;
-    left: 0;
-    position: fixed;
     list-style: none;
-    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    width: fit-content;
 }
 
 .sidebar li {

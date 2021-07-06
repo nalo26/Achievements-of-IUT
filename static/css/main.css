@@ -18,13 +18,14 @@
 }
 
 body {
+    margin: 0;
+    top: 0;
 	font-family: "Exo 2";
 	background: var(--main-color);
 	font-size: 15px;
 	color: var(--text);
-}
 
-.tree {
-	margin-top: 70px;
-    margin-left: 200px;
+    display: grid;
+    grid-template-columns: fit-content(100%) auto;
+    grid-template-rows: 5% 95%;
 }
