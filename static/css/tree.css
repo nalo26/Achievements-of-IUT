@@ -1,5 +1,5 @@
 .tree-div {
-    margin: 20px;
+    margin: 0px 20px 20px 20px;
     grid-column: 2;
     grid-row: 2;
 }
@@ -14,7 +14,7 @@
 
 .branch {
     position: relative;
-    margin-left: 250px;
+    margin-left: 400px;
 }
 .branch:before {
     content: "";
@@ -28,7 +28,7 @@
 
 .entry {
     position: relative;
-    min-height: 60px;
+    min-height: 80px;
 }
 .entry:before {
     content: "";
@@ -80,17 +80,18 @@
 }
 
 .label {
-    display: block;
-    min-width: 150px;
+    display: inline-block;
+    width: 300px;
+    min-height: 70px;
+    height: fit-content;
     padding: 5px 10px;
-    line-height: 20px;
     text-align: center;
     border: 2px solid #eee9dc;
     border-radius: 5px;
     position: absolute;
     left: 0;
     top: 50%;
-    margin-top: -15px;
+    margin-top: -30px;
 }
 
 .tree > div:before,

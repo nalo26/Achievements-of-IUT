@@ -32,12 +32,13 @@
 
                 let entry = document.createElement("div");
                 entry.className = "entry";
+                if(achievements.length == 1) entry.classList.add("sole");
 
                 let label = document.createElement("span");
                 label.className = "label";
                 let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
                 label.style.borderColor = color;
-                label.innerHTML = a.name;
+                label.innerHTML = "<p>" + a.name + "</p><i>" + a.lore + "</i>";
                 
                 entry.appendChild(label);
                 parent_node.appendChild(entry);
@@ -47,7 +48,7 @@
                     next.className = "branch";
                     entry.appendChild(next);
                     tree_builder(a.childs, next);
-                } //else entry.classList.add("sole");
+                }
             }
         }
     </script>

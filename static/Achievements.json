@@ -51,12 +51,14 @@
                     {
                         "name": "Is this programming?",
                         "lore": "Installer un CMS pour le projet.",
-                        "difficulty": 2
-                    },
-                    {
-                        "name": "Definitely not programming",
-                        "lore": "Finir entièrement votre site vitrine pour le projet.",
-                        "difficulty": 4
+                        "difficulty": 2,
+                        "childs": [
+                            {
+                                "name": "Definitely not programming",
+                                "lore": "Finir entièrement votre site vitrine pour le projet.",
+                                "difficulty": 4
+                            }
+                        ]
                     }
                 ]
             },

@@ -29,3 +29,8 @@ body {
     grid-template-columns: fit-content(100%) auto;
     grid-template-rows: 5% 95%;
 }
+
+p {
+    text-decoration: underline;
+    margin: 0;
+}
