@@ -117,7 +117,14 @@
                     {
                         "name": "You're now Linked In",
                         "lore": "Créer un compte LinkedIn en cours de PPP.",
-                        "difficulty": 1
+                        "difficulty": 1,
+                        "childs": [
+                            {
+                                "name": "Friendship power!",
+                                "lore": "Avoir plus de 100 relations sur le réseau.",
+                                "difficulty": 2
+                            }
+                        ]
                     },
                     {
                         "name": "Retranscripting",
@@ -153,17 +160,26 @@
                     {
                         "name": "Android master",
                         "lore": "Faire fonctionner Android Studio du premier coup.",
-                        "difficulty": 3
+                        "difficulty": 3,
+                        "childs": [
+                            {
+                                "name": "Android God",
+                                "lore": "Ne jamais rencontrer aucun problème avec Android Studio.",
+                                "difficulty": 4
+                            }
+                        ]
                     },
                     {
                         "name": "Internship master",
                         "lore": "Trouver un stage avant le Speed Meeting.",
-                        "difficulty": 4
-                    },
-                    {
-                        "name": "Any internship?",
-                        "lore": "Participer au Speed Meeting.",
-                        "difficulty": 1
+                        "difficulty": 4,
+                        "childs": [
+                            {
+                                "name": "Any internship?",
+                                "lore": "Participer au Speed Meeting.",
+                                "difficulty": 1
+                            }
+                        ]
                     }
                 ]
             }

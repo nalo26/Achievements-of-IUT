@@ -37,5 +37,7 @@
 }
 
 .active {
-	background-color: var(--dark-link);
+	background-color: var(--main-color);
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
