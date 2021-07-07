@@ -10,52 +10,66 @@
                 "childs": [
                     {
                         "name": "I was here, 1st edition",
-                        "lore": "Assister à tous les cours (sans exception) du S1.",
+                        "lore": "Assister à tous les cours (sans exception) du S1",
                         "difficulty": 3
                     },
                     {
                         "name": "Distraction",
-                        "lore": "Ne pas sortir son téléphone pendant les cours de M. Lucci.",
+                        "lore": "Ne pas sortir son téléphone pendant les cours de M. Lucci",
                         "difficulty": 3
                     },
                     {
                         "name": "What the boats",
-                        "lore": "Finir le TP Bateau de M. Lucci.",
-                        "difficulty": 1
+                        "lore": "Finir le TP Bateau de M. Lucci",
+                        "difficulty": 1,
+                        "childs": [
+                            {
+                                "name": "Algortithms master",
+                                "lore": "Finir à temps tous les TP d'algorithmique",
+                                "difficulty": 3
+                            }
+                        ]
                     },
                     {
                         "name": "Financial game",
-                        "lore": "Finir votre jeu créé pour le TP d'économie.",
+                        "lore": "Finir votre jeu créé pour le TP d'économie",
                         "difficulty": 1
                     },
                     {
                         "name": "HTML is easy",
-                        "lore": "Obtenir une note inférieure à la moyenne à un TP de HTML (ne le faites pas exprès !).",
+                        "lore": "Obtenir une note inférieure à 10/20 à un TP de HTML (ne le faites pas exprès !)",
                         "difficulty": 3
                     },
                     {
                         "name": "Power of grids",
-                        "lore": "Participer au TP-TD sur Excel avec Mme Mercier.",
+                        "lore": "Participer au TP-TD sur Excel avec Mme Mercier",
                         "difficulty": 1
                     },
                     {
                         "name": "The language of wizards",
-                        "lore": "Finir le TP sur le langage LaTeX de Mme Mercier.",
+                        "lore": "Finir le TP sur le langage LaTeX de Mme Mercier",
                         "difficulty": 4
                     },
                     {
                         "name": "French master",
-                        "lore": "Avoir 20/20 au DS d'orthographe de M. De Sauza.",
-                        "difficulty": 4
+                        "lore": "Avoir une note supérieure à 15/20 au DS d'orthographe de M. De Sauza",
+                        "difficulty": 3,
+                        "childs": [
+                            {
+                                "name": "French god",
+                                "lore": "Obtenir la note parfaite de 20/20",
+                                "difficulty": 4
+                            }
+                        ]
                     },
                     {
                         "name": "Is this programming?",
-                        "lore": "Installer un CMS pour le projet.",
+                        "lore": "Installer un CMS pour le projet",
                         "difficulty": 2,
                         "childs": [
                             {
                                 "name": "Definitely not programming",
-                                "lore": "Finir entièrement votre site vitrine pour le projet.",
+                                "lore": "Finir entièrement son site vitrine pour le projet",
                                 "difficulty": 4
                             }
                         ]
@@ -68,32 +82,46 @@
                 "childs": [
                     {
                         "name": "I was here, 2nd edition",
-                        "lore": "Assister à tous les cours (sans exception) du S2.",
+                        "lore": "Assister à tous les cours (sans exception) du S2",
                         "difficulty": 3
                     },
                     {
                         "name": "Is he useful?",
-                        "lore": "Recevoir une aide utile de M. Bettinelli.",
-                        "difficulty": 1
+                        "lore": "Recevoir une aide utile de M. Bettinelli",
+                        "difficulty": 1,
+                        "childs": [
+                            {
+                                "name": "Switching roles",
+                                "lore": "Lui faire découvrir quelque chose",
+                                "difficulty": 3
+                            }
+                        ]
                     },
                     {
                         "name": "Schemas master",
-                        "lore": "Avoir une note supérieure à 15/20 à un DS de COO.",
-                        "difficulty": 4
+                        "lore": "Avoir une note supérieure à 15/20 à un DS de COO",
+                        "difficulty": 4,
+                        "childs": [
+                            {
+                                "name": "Schemas god",
+                                "lore": "Avoir 20/20 à un DS de COO",
+                                "difficulty": 5
+                            }
+                        ]
                     },
                     {
                         "name": "Chess master",
-                        "lore": "Finir le TP Cavalier de C dans les temps.",
+                        "lore": "Finir le TP Cavalier de C dans les temps",
                         "difficulty": 3
                     },
                     {
                         "name": "Killing network",
-                        "lore": "Ressortir vivant des TP de réseau.",
+                        "lore": "Ressortir vivant des TP de Réseau",
                         "difficulty": 1
                     },
                     {
                         "name": "Organisation master",
-                        "lore": "Faire un bon schéma Gantt Project.",
+                        "lore": "Faire un bon schéma Gantt Project",
                         "difficulty": 1
                     }
                 ]
@@ -111,40 +139,61 @@
                 "childs": [
                     {
                         "name": "I was here, 3rd edition",
-                        "lore": "Assister à tous les cours (sans exception) du S3.",
+                        "lore": "Assister à tous les cours (sans exception) du S3",
                         "difficulty": 3
                     },
                     {
                         "name": "You're now Linked In",
-                        "lore": "Créer un compte LinkedIn en cours de PPP.",
+                        "lore": "Créer un compte LinkedIn en cours de PPP",
                         "difficulty": 1,
                         "childs": [
                             {
                                 "name": "Friendship power!",
-                                "lore": "Avoir plus de 100 relations sur le réseau.",
+                                "lore": "Avoir plus de 100 relations sur le réseau",
                                 "difficulty": 2
                             }
                         ]
                     },
                     {
-                        "name": "Retranscripting",
-                        "lore": "Prendre en note l'intégralité du cours de Droit des TIC.",
-                        "difficulty": 4
-                    },
-                    {
-                        "name": "Wanted: marks",
-                        "lore": "Revoir les copies des DS de Droit des TIC.",
-                        "difficulty": 5
-                    },
-                    {
                         "name": "C master",
-                        "lore": "Finir à temps un TP de C avancé.",
-                        "difficulty": 2
+                        "lore": "Ne jamais poser une seule question au prof/intervenant en TP",
+                        "difficulty": 4,
+                        "childs": [
+                            {
+                                "name": "C god",
+                                "lore": "Finir à temps un TP de C avancé",
+                                "difficulty": 2
+                            }
+                        ]
                     },
                     {
                         "name": "Drawer master",
-                        "lore": "Avoir une note supérieure à 15/20 à un DS de Gestion des SI.",
+                        "lore": "Avoir une note supérieure à 15/20 à un DS de Gestion des SI",
                         "difficulty": 4
+                    },
+                    {
+                        "name": "Law has no secrets for me",
+                        "lore": "Suivre tous les cours de Droit des TIC",
+                        "difficulty": 4,
+                        "childs": [
+                            {
+                                "name": "Retranscripting",
+                                "lore": "Prendre en note l'intégralité du cours de Droit des TIC",
+                                "difficulty": 4
+                            },
+                            {
+                                "name": "Not very straight of you",
+                                "lore": "Obtenir une note supérieure à 8/20 à un DS de Droit des TIC",
+                                "difficulty": 2,
+                                "childs": [
+                                    {
+                                        "name": "Wanted: marks",
+                                        "lore": "Revoir les copies des DS de Droit des TIC",
+                                        "difficulty": 5
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             },
@@ -154,30 +203,59 @@
                 "childs": [
                     {
                         "name": "I was here, 4th edition",
-                        "lore": "Assister à tous les cours (sans exception) du S4.",
+                        "lore": "Assister à tous les cours (sans exception) du S4",
                         "difficulty": 3
                     },
                     {
                         "name": "Android master",
-                        "lore": "Faire fonctionner Android Studio du premier coup.",
+                        "lore": "Faire fonctionner Android Studio du premier coup",
                         "difficulty": 3,
                         "childs": [
                             {
                                 "name": "Android God",
-                                "lore": "Ne jamais rencontrer aucun problème avec Android Studio.",
+                                "lore": "Ne jamais rencontrer aucun problème avec Android Studio",
+                                "difficulty": 4
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Dedicated for the team",
+                        "lore": "Être présent tous les jours consacrés au projet",
+                        "difficulty": 2,
+                        "childs": [
+                            {
+                                "name": "Reaching the end",
+                                "lore": "Finir entièrement votre projet",
                                 "difficulty": 4
                             }
                         ]
                     },
                     {
                         "name": "Internship master",
-                        "lore": "Trouver un stage avant le Speed Meeting.",
+                        "lore": "Trouver un stage avant le Speed Meeting",
                         "difficulty": 4,
                         "childs": [
                             {
                                 "name": "Any internship?",
-                                "lore": "Participer au Speed Meeting.",
-                                "difficulty": 1
+                                "lore": "Participer au Speed Meeting",
+                                "difficulty": 1,
+                                "childs": [
+                                    {
+                                        "name": "Peaceful place",
+                                        "lore": "Faire un stage avec des missions qui vous intéressent réellement",
+                                        "difficulty": 3
+                                    },
+                                    {
+                                        "name": "The chad writter",
+                                        "lore": "Faire son rapport de stage en LaTeX",
+                                        "difficulty": 4
+                                    },
+                                    {
+                                        "name": "Internship god",
+                                        "lore": "Obtenir une note de stage générale supérieure à 15/20",
+                                        "difficulty": 3
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -187,213 +265,251 @@
     },
     {   "name": "Achievements globaux",
         "aliases": ["achievements_globaux", "globaux", "global", "général", "généraux"],
-        "lore": "Tous les défis impossibles à placer spécifiquement.",
+        "lore": "Tous les défis impossibles à placer spécifiquement",
         "difficulty": 3,
         "childs": [
             {
-                "name": "I was here, boss edition",
-                "lore": "Assister à tous les cours (sans exception), tous semestres confondus.",
-                "difficulty": 5
-            },
-            {
-                "name": "Sorry I'm late!",
-                "lore": "Passer un cours avec M. Charensol sans que personne n'arrive en retard.",
-                "difficulty": 2
-            },
-            {
-                "name": "Discord hacker",
-                "lore": "Arriver sur le compte Discord de quelqu'un d'autre en le lançant à l'IUT.",
-                "difficulty": 1
-            },
-            {
-                "name": "Session hacker",
-                "lore": "Arriver sur un ordinateur avec une session déjà ouverte sur le compte de quelqu'un d'autre.",
-                "difficulty": 1
-            },
-            {
-                "name": "New friend?",
-                "lore": "Recevoir un message privé Discord de la part d'un prof.",
-                "difficulty": 2
-            },
-            {
-                "name": "Free slur",
-                "lore": "Se faire insulter par Mme Metge.",
-                "difficulty": 2
-            },
-            {
-                "name": "Databases master",
-                "lore": "Réussir entièrement un TP de Base de données.",
-                "difficulty": 3
-            },
-            {
                 "name": "Weeb year",
-                "lore": "N'avoir aucun Weeb dans la promotion.",
+                "lore": "N'avoir aucun Weeb dans la promotion",
                 "difficulty": 5
             },
             {
                 "name": "Give my money back",
-                "lore": "Se faire arnaquer par la machine à café.",
+                "lore": "Se faire arnaquer par la machine à café",
                 "difficulty": 1
             },
             {
                 "name": "Look, it's printing!",
-                "lore": "Imprimer un document à l'IUT.",
-                "difficulty": 1
+                "lore": "Imprimer un document à l'IUT",
+                "difficulty": 1,
+                "childs": [
+                    {
+                        "name": "Printer master",
+                        "lore": "Vider son compte impression tellement vous avez imprimé",
+                        "difficulty": 4
+                    }
+                ]
+            },
+            {
+                "name": "Session hacker",
+                "lore": "Arriver sur un ordinateur avec la session de quelqu'un d'autre d'ouverte ",
+                "difficulty": 2,
+                "childs": [
+                    {
+                        "name": "Discord hacker",
+                        "lore": "Arriver sur le compte Discord de quelqu'un d'autre en le lançant à l'IUT",
+                        "difficulty": 1
+                    }
+                ]
+            },
+            {
+                "name": "New friend?",
+                "lore": "Recevoir un message privé Discord de la part d'un prof",
+                "difficulty": 2
+            },
+            {
+                "name": "Databases master",
+                "lore": "Réussir entièrement un TP de Base de données",
+                "difficulty": 3
             },
             {
                 "name": "We are the gamer",
-                "lore": "Participer à une LAN Minecraft à l'IUT.",
+                "lore": "Participer à une LAN Minecraft à l'IUT",
                 "difficulty": 3
             },
             {
                 "name": "Jokes on you",
-                "lore": "Ne faire aucun meme sur les profs de l'IUT.",
+                "lore": "Ne faire aucun meme sur les profs de l'IUT",
                 "difficulty": 5
             },
             {
-                "name": "Ah, you noob",
-                "lore": "Battre un prof lors d'une compétition de programmation.",
-                "difficulty": 4
-            },
-            {
                 "name": "Dreaming of code",
-                "lore": "Participer à la nuit de l'info depuis l'IUT.",
-                "difficulty": 2
+                "lore": "Participer à la nuit de l'info depuis l'IUT",
+                "difficulty": 2,
+                "childs": [
+                    {
+                        "name": "Ah, you noob",
+                        "lore": "Battre un prof lors d'une compétition de programmation",
+                        "difficulty": 4
+                    }
+                ]
             },
             {
-                "name": "Segfault",
-                "lore": "Ne jamais avoir de Segfault en C.",
-                "difficulty": 4
-            },
-            {
-                "name": "Indentation error",
-                "lore": "Ne jamais avoir d'erreur d'indentation en Python.",
-                "difficulty": 4
-            },
-            {
-                "name": "NullPointerException",
-                "lore": "Ne jamais avoir de NullPointerException en Java.",
-                "difficulty": 4
+                "name": "Look, an error!",
+                "lore": "Obtenir sa première erreur de programmation",
+                "difficulty": 1,
+                "childs": [
+                    {
+                        "name": "Segfault",
+                        "lore": "Ne jamais avoir de Segfault en C",
+                        "difficulty": 4
+                    },
+                    {
+                        "name": "Indentation error",
+                        "lore": "Ne jamais avoir d'erreur d'indentation en Python",
+                        "difficulty": 3
+                    },
+                    {
+                        "name": "NullPointerException",
+                        "lore": "Ne jamais avoir de NullPointerException en Java",
+                        "difficulty": 4
+                    }
+                ]
             },
             {
                 "name": "You're the best",
-                "lore": "Majorer la promotion (top 5).",
+                "lore": "Majorer la promotion (top 5)",
                 "difficulty": 4
             },
             {
-                "name": "Forbidden phone",
-                "lore": "Recevoir la remarque \"Les téléphones portables sont interdits en CM, TD et TP !\" de M. Charensol.",
-                "difficulty": 2
-            },
-            {
                 "name": "Food break",
-                "lore": "Manger au Crous.",
+                "lore": "Manger au Crous",
                 "difficulty": 1
             },
             {
                 "name": "Form spam",
-                "lore": "Remplir (sérieusement) un questionnaire de GEA / TC.",
-                "difficulty": 1
+                "lore": "Remplir (sérieusement) un questionnaire de GEA / TC",
+                "difficulty": 1,
+                "childs": [
+                    {
+                        "name": "Attack is the best defence",
+                        "lore": "Répondre au mail donnant le formulaire pour faire remarquer toutes les erreurs",
+                        "difficulty": 2
+                    },
+                    {
+                        "name": "It's your turn now",
+                        "lore": "Créer son propre formulaire dans un but de diffusion",
+                        "difficulty": 2
+                    }
+                ]
             },
             {
                 "name": "Reading master",
-                "lore": "Lire entièrement un des livres demandés pour les cours de Communication.",
+                "lore": "Lire entièrement un des livres demandés pour les cours de Communication",
                 "difficulty": 1
             },
             {
                 "name": "Sweat dreams",
-                "lore": "Ne dormir dans aucun cours.",
+                "lore": "Ne dormir dans aucun cours",
                 "difficulty": 2
             },
             {
                 "name": "Early Leaving",
-                "lore": "Voir M. Lucci partir de son cours avant la fin de l'heure.",
-                "difficulty": 4
+                "lore": "Voir M. Lucci partir de son cours avant la fin de l'heure",
+                "difficulty": 4,
+                "childs": [
+                    {
+                        "name": "The impossible miss",
+                        "lore": "Vivre la mythique expérience de M. Lucci absent",
+                        "difficulty": 4
+                    }
+                ]
             },
             {
                 "name": "Night bird",
-                "lore": "Recevoir un mail de Mme Mercier à/après 23h.",
-                "difficulty": 4
+                "lore": "Recevoir un mail de Mme Mercier à/après 23h",
+                "difficulty": 4,
+                "childs": [
+                    {
+                        "name": "Nighter bird",
+                        "lore": "Répondre à son mail (de manière utile) tout aussi tard",
+                        "difficulty": 2
+                    }
+                ]
             },
             {
                 "name": "Dedicated student",
-                "lore": "Être délégué⸱e au moins une année.",
-                "difficulty": 3
+                "lore": "Être délégué•e au moins une année",
+                "difficulty": 3,
+                "childs": [
+                    {
+                        "name": "Our beloved",
+                        "lore": "Être délégué•e toutes les années",
+                        "difficulty": 4
+                    }
+                ]
             },
             {
                 "name": "Coding life",
-                "lore": "Passer un cours avec M. Genthial sans qu'il ne code ni n'utilise une ligne de commande.",
+                "lore": "Passer un cours avec M. Genthial sans qu'il ne code ni n'utilise le shell",
                 "difficulty": 5
             },
             {
                 "name": "Confused stonks",
-                "lore": "Avoir un contrôle de M. Genthial noté sur 20 (pas plus, pas moins).",
+                "lore": "Avoir un contrôle de M. Genthial noté sur 20 (pas plus, pas moins)",
                 "difficulty": 4
             },
             {
-                "name": "The noobiest noob",
-                "lore": "Avoir une note inférieur à la moyenne (<10/20) à un contrôle de M. Charensol alors qu'il \"a été très gentil\".",
-                "difficulty": 2
+                "name": "I was here, boss edition",
+                "lore": "Assister à tous les cours (sans exception), tous semestres confondus",
+                "difficulty": 5
             },
             {
-                "name": "The end",
-                "lore": "Obtenir son DUT.",
-                "difficulty": 2
+                "name": "The end?",
+                "lore": "Passer tous les semestres sans seuil",
+                "difficulty": 2,
+                "childs": [
+                    {
+                        "name": "The end!",
+                        "lore": "Obtenir son DUT<br>Bien joué, vous avez fini !",
+                        "difficulty": 1
+                    }
+                ]
             }
         ]
     },
     {   "name": "Spéciaux profs",
         "aliases": ["spéciaux_profs", "profs", "prof", "professeurs", "professeur", "enseignants", "enseignant"],
-        "lore": "Tous les défis liés aux profs directement.",
+        "lore": "Tous les défis liés aux profs directement",
         "difficulty": 3,
         "childs": [
             {   "name": "M. Objois",
-                "lore": "Tous les défis liés à M. Objois.",
+                "lore": "Tous les défis liés à M. Objois",
                 "difficulty": 3,
                 "childs": [
                     {
                         "name": "Network master",
-                        "lore": "Avoir une note supérieure à 15/20 lors d'un DS de M. Objois.",
+                        "lore": "Avoir une note supérieure à 15/20 lors d'un DS de M. Objois",
                         "difficulty": 3
                     },
                     {
                         "name": "From Hawaii to UDP",
-                        "lore": "Comprendre tout le cours de réseau.",
+                        "lore": "Comprendre tout le cours de réseau",
                         "difficulty": 3
                     },
                     {
                         "name": "Defeat the boss",
-                        "lore": "Reprendre M. Objois lorsqu'il fait une erreur.",
+                        "lore": "Reprendre M. Objois lorsqu'il fait une erreur",
                         "difficulty": 4
                     },
                     {
                         "name": "Catch them all, Objois edition",
-                        "lore": "Collecter toutes les phrases cultes de M. Objois.",
+                        "lore": "Collecter toutes les phrases cultes de M. Objois",
                         "difficulty": 4,
                         "childs": [
                             {
                                 "name": "\"On verra ça plus tard\"",
-                                "lore": "\"On verra ça plus tard\"",
+                                "lore": "Si celle-ci vous ne l'entendez jamais, inquiétez-vous",
                                 "difficulty": 1
                             },
                             {
                                 "name": "\"Alors, ça ping ?\"",
-                                "lore": "\"Alors, ça ping ?\"",
+                                "lore": "Clairement, non, ça ne ping pas",
                                 "difficulty": 2
                             },
                             {
                                 "name": "\"J'aime quand vous parlez comme ça\"",
-                                "lore": "\"J'aime quand vous parlez comme ça\"",
+                                "lore": "( ͡° ͜ʖ ͡°)",
                                 "difficulty": 3
                             },
                             {
                                 "name": "\"C'est facile, vous savez faire\"",
-                                "lore": "\"C'est facile, vous savez faire\"",
+                                "lore": "Généralement, non, vous ne savez pas",
                                 "difficulty": 3
                             },
                             {
                                 "name": "\"Personne ne sort avant 1/2 heure\"",
-                                "lore": "\"Personne ne sort avant 1/2 heure\"",
+                                "lore": "Bloqué•e•s pour un bon moment",
                                 "difficulty": 4
                             }
                         ]
@@ -401,60 +517,131 @@
                 ]
             },
             {   "name": "Mme Constant",
-                "lore": "Tous les défis liés à Mme Constant.",
+                "lore": "Tous les défis liés à Mme Constant",
                 "difficulty": 4,
                 "childs": [
                     {
                         "name": "High pitched prank",
-                        "lore": "Garder son sérieux en entendant sa voix pour la première fois.",
+                        "lore": "Garder son sérieux en entendant sa voix pour la première fois",
                         "difficulty": 4
                     },
                     {
                         "name": "Is last minute late?",
-                        "lore": "Ne pas faire les TP de comptabilité au dernier moment (1 semaine avant).",
+                        "lore": "Ne pas faire les TP de comptabilité au dernier moment (1 semaine avant)",
                         "difficulty": 4
                     },
                     {
                         "name": "You will not survive",
-                        "lore": "Lire intégralement un polycopié.",
+                        "lore": "Lire intégralement un polycopié",
                         "difficulty": 5
                     },
                     {
                         "name": "Listening master",
-                        "lore": "Écouter un cours complet sans distraction.",
+                        "lore": "Écouter un cours complet sans distraction",
                         "difficulty": 4
                     },
                     {
                         "name": "Wait, that's illegal",
-                        "lore": "Appliquer toutes les règles de diaporama de M. De Sauza aux diaporamas de Mme Constant.",
+                        "lore": "Appliquer toutes les règles de diaporama de M. De Sauza aux diaporamas de Mme Constant",
                         "difficulty": 4
                     },
                     {
                         "name": "Catch them all, Blandine edition",
-                        "lore": "Collecter toutes les phrases cultes de Mme Constant.",
+                        "lore": "Collecter toutes les phrases cultes de Mme Constant",
                         "difficulty": 4,
                         "childs": [
                             {
                                 "name": "\"Un p'tit appeeeeeeeel\"",
-                                "lore": "\"Un p'tit appeeeeeeeel\"",
+                                "lore": "Sans doute la phrase que vous allez le plus entendre de votre vie",
                                 "difficulty": 1
                             },
                             {
                                 "name": "\"Vous sortez vos polycop'\"",
-                                "lore": "\"Vous sortez vos polycop'\"",
+                                "lore": "Vos compagnons de route que ne lirez jamais, ne mentez pas",
                                 "difficulty": 1
                             },
                             {
                                 "name": "\"Vous sortez vos PCG\"",
-                                "lore": "\"Vous sortez vos PCG\" (ou \"Plans Comptables\")",
+                                "lore": "\"PCG\" ou \"Plans comptables\", les deux fonctionnent",
                                 "difficulty": 2
                             },
                             {
-                                "name": "\"[prénom] ? Il est pas la [prénom] ?\"",
-                                "lore": "\"[prénom] ? Il est pas la [prénom] ?\" (où [prénom] désigne une personne quelconque)",
+                                "name": "\"[prénom] ? Iel est pas la [prénom] ?\"",
+                                "lore": "\"[prénom]\" désigne n'importe qui, \"iel\" étant la forme neutre de il/elle",
                                 "difficulty": 4
                             }
                         ]
+                    }
+                ]
+            },
+            {   "name": "Mme. Metge",
+                "lore": "Tous les défis liés à Mme Metge",
+                "difficulty": 3,
+                "childs": [
+                    {
+                        "name": "Balanced diet",
+                        "lore": "Recevoir un bonbon de sa part (pour bonne participation)",
+                        "difficulty": 2
+                    },
+                    {
+                        "name": "Free slur",
+                        "lore": "Se faire insulter par Mme Metge",
+                        "difficulty": 3,
+                        "childs": [
+                            {
+                                "name": "\"I am agree\"",
+                                "lore": "Lui sortir cette phrase mythique (attention aux conséquences)",
+                                "difficulty": 1
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Catch them all, Metge edition",
+                        "lore": "Collecter tous les TIC cultes de Mme Metge",
+                        "difficulty": 4,
+                        "childs": [
+                            {
+                                "name": "\"ui ui\"",
+                                "lore": "Quand personne ne répond, il faut bien qu'elle réponde à votre place",
+                                "difficulty": 1
+                            },
+                            {
+                                "name": "\"Yes? Yeeeees\"",
+                                "lore": "Idem, mais en anglais",
+                                "difficulty": 1
+                            },
+                            {
+                                "name": "\"Loulou\"",
+                                "lore": "Se faire appeller \"Loulou\"",
+                                "difficulty": 2
+                            }
+                        ]
+                    }
+                ]
+            },
+            {   "name": "M. Charensol",
+                "lore": "Tous les défis liés à M. Charensol",
+                "difficulty": 2,
+                "childs": [
+                    {
+                        "name": "Sorry I'm late!",
+                        "lore": "Passer un de ses cours sans que personne n'arrive en retard",
+                        "difficulty": 1
+                    },
+                    {
+                        "name": "Ha! You noob",
+                        "lore": "Avoir moins de 10/20 à un de ses contrôles alors qu'il \"a été très gentil\"",
+                        "difficulty": 2
+                    },
+                    {
+                        "name": "Forbidden phone",
+                        "lore": "Recevoir \"Les téléphones portables sont interdits en CM, TD et TP !\" de sa part",
+                        "difficulty": 2
+                    },
+                    {
+                        "name": "Stalking",
+                        "lore": "Le voir ranger son vélo dans son bureau au moins une fois par jour de la semaine",
+                        "difficulty": 4
                     }
                 ]
             }
@@ -462,42 +649,42 @@
     },
     {   "name": "Spéciaux distanciel",
         "aliases": ["spéciaux_distanciel", "distanciel", "distance", "teletravail"],
-        "lore": "Tous les défis à effectuer lors des cours à distance.",
+        "lore": "Tous les défis à effectuer lors des cours à distance",
         "difficulty": 3,
         "childs": [
             {
                 "name": "Quizz master",
-                "lore": "Finir premier du classement lors d'un quizz Kahoot.",
+                "lore": "Finir premier du classement lors d'un quizz Kahoot",
                 "difficulty": 3
             },
             {
                 "name": "Poll intensify",
-                "lore": "Passer un cours avec M. Charensol durant lequel il ne fait aucun sondage sur BBB.",
+                "lore": "Passer un cours avec M. Charensol durant lequel il ne fait aucun sondage",
                 "difficulty": 4
             },
             {
                 "name": "Hello world",
-                "lore": "Activer sa caméra durant toute la durée d'un cours.",
+                "lore": "Activer sa caméra durant toute la durée d'un cours",
                 "difficulty": 3
             },
             {
                 "name": "Wrong place",
-                "lore": "Se tromper de lien de cours (de manière non voulue).",
+                "lore": "Se tromper de lien de cours (de manière non intentionnelle)",
                 "difficulty": 2
             },
             {
                 "name": "Quiet place",
-                "lore": "Passer un cours avec Mme Constant sans entendre ses enfants.",
+                "lore": "Passer un cours avec Mme Constant sans entendre ses enfants",
                 "difficulty": 4
             },
             {
                 "name": "Ghost roleplaying",
-                "lore": "Ne sécher aucun cours dans lequel le professeur ne fait pas l'appel.",
+                "lore": "Ne sécher aucun cours dans lequel le professeur ne fait pas l'appel",
                 "difficulty": 3
             },
             {
                 "name": "Above us",
-                "lore": "Suivre tous les cours en distanciel sans aucune distraction (jeux, vocaux, messages, internet...).",
+                "lore": "Suivre tous les cours en distanciel sans aucune distraction (jeux, vocaux, messages, internet...)",
                 "difficulty": 5
             }
         ]        
