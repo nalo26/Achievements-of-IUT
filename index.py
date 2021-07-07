@@ -3,7 +3,8 @@ import json
 
 app = Flask(__name__)
 
-achievements_data = json.loads(open('static/Achievements.json', 'r', encoding='utf-8').read())
+# achievements_data = json.loads(open('static/Achievements.json', 'r', encoding='utf-8').read())
+achievements_path = 'static/Achievements.json'
 
 @app.route('/')
 @app.route('/achievement')
@@ -15,7 +16,7 @@ def main():
 @app.route('/achievements/<string:cat_name>')
 def achievements_name(cat_name):
     cat_name = format_string(cat_name)
-    for i, d in enumerate(achievements_data):
+    for i, d in enumerate(read_json(achievements_path)):
         if cat_name in d["aliases"]: return redirect(f'/achievements/{i}')
     return redirect('/achievements/0')
 
@@ -27,6 +28,7 @@ def achievement(cat_id):
 # ---------------------------------------------------------------------------------------
 @app.route('/achievements/<int:cat_id>')
 def achievements(cat_id):
+    achievements_data = read_json(achievements_path)
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
     
     return render_template('achievements.html', achievements=achievements_data, category=cat_id)
@@ -42,6 +44,13 @@ def error_page(error):
 
 def format_string(string):
     return string.lower().replace(" ", "_")
+
+def read_json(path):
+    data = []
+    with open(path, 'r', encoding="utf-8") as mf:
+        data = json.load(mf)
+    mf.close()
+    return data
 
 
 if __name__ == '__main__':
