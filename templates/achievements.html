@@ -39,6 +39,16 @@
                 let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
                 label.style.borderColor = color;
                 label.innerHTML = "<p>" + a.name + "</p><i>" + a.lore + "</i>";
+                label.addEventListener("click", function(e) {
+                    label.classList.toggle("clicked");
+                    if(label.classList.contains("clicked")) {
+                        let c = [];
+                        color.trim().substring(4, color.length-1).split(",").forEach(i => c.push(parseInt(i)-50));
+                        label.style.backgroundColor = "rgb(" + c.join(", ") + ")";
+                    } else {
+                        label.style.backgroundColor = "transparent";
+                    }
+                });
                 
                 entry.appendChild(label);
                 parent_node.appendChild(entry);

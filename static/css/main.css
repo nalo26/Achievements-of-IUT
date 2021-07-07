@@ -4,12 +4,11 @@
     --light-link: #2f3847;
     --dark-link: #0f141d;
     --text: #ffffff;
-    --difficulty-1: #6AA84F;
-    --difficulty-2: #4A86EF;
-    --difficulty-3: #E69137;
-    --difficulty-4: #b10000;
-    --difficulty-5: #674EA7;
-    /* --difficulty-5: #000000; */
+    --difficulty-1: rgb(106, 168, 79);
+    --difficulty-2: rgb(74, 134, 239);
+    --difficulty-3: rgb(230, 145, 55);
+    --difficulty-4: rgb(177, 0, 0);
+    --difficulty-5: rgb(103, 78, 167);
 }
 
 @font-face {

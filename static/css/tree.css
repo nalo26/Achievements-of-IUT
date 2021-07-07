@@ -94,6 +94,15 @@
     margin-top: -30px;
 }
 
+.label:hover {
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.label:not(hover) {
+    transition-duration: 0.3s;
+}
+
 .tree > div:before,
 .tree > div:after {
     border: none !important;
