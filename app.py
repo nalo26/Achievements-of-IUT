@@ -1,13 +1,14 @@
 from flask import Flask, redirect, render_template
 import json
 import os
-import db
+import db, auth
 
 app = Flask(__name__, instance_relative_config = True)
 app.config.from_mapping(
     SECRET_KEY = 'dev',
     DATABASE = os.path.join(app.instance_path, 'database.sqlite'),
 )
+app.register_blueprint(auth.bp)
 db.init_app(app)
 
 # achievements_data = json.loads(open('static/Achievements.json', 'r', encoding='utf-8').read())

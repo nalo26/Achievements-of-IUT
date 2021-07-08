@@ -1,13 +1,13 @@
-<head>
-    <title>[IUT RPG] {{ achievements[category].name }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+{% extends 'base.html' %}
+
+{% block title %}{{ achievements[category].name }}{% endblock %}
+
+{% block styles %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tree.css') }}">
-</head>
+{% endblock %}
 
-<body>
-    {% include "navbar.html" %}
+{% block content %}
 
     <div class="sidebar">
         {% for a in achievements %}
@@ -70,4 +70,4 @@
             }
         }
     </script>
-</body>
+{% endblock %}

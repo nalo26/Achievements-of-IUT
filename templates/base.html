@@ -1,0 +1,16 @@
+<head>
+    <title>[IUT RPG] {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    {% block styles %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar">
+        <li><a href="/achievements">Achievements</a></li>
+        <li style="float:right"><a href="/leaderboard">Leaderboard</a></li>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+</body>
