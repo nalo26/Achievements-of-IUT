@@ -29,10 +29,11 @@ def register():
 
         if error is None:
             db.execute(
-                'INSERT INTO user (firstname, lastname, password) VALUES (?, ?, ?)',
-                (firstname, lastname, generate_password_hash(password))
+                'INSERT INTO user (firstname, lastname, password, score) VALUES (?, ?, ?, ?)',
+                (firstname, lastname, generate_password_hash(password), 0)
             )
             db.commit()
+            flash("Inscription complète, veuillez vous connecter.", 'success')
             return redirect(url_for('auth.login'))
 
         flash(error, 'error')
@@ -64,7 +65,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('achievements'))
+            return redirect(url_for('achievements', cat_id=0))
 
         flash(error, 'error')
 
