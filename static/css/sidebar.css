@@ -1,11 +1,13 @@
 .sidebar {
     grid-area: nav;
+    overflow: hidden;
     background-color: var(--secondary-color);
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    max-width: 190px;
 }
 
 .sidebar li {
@@ -38,16 +40,4 @@
 	background-color: var(--main-color);
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
-}
-
-.difficulties {
-    padding: 5px;
-    margin-top: auto;
-}
-
-.dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
 }

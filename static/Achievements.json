@@ -696,7 +696,35 @@
             {
                 "name": "Easy",
                 "lore": "Easy",
-                "difficulty": 1
+                "difficulty": 1,
+                "childs": [
+                    {
+                        "name": "Normal",
+                        "lore": "Normal",
+                        "difficulty": 2,
+                        "childs": [
+                            {
+                                "name": "Hard",
+                                "lore": "Hard",
+                                "difficulty": 3,
+                                "childs": [
+                                    {
+                                        "name": "Hardcore",
+                                        "lore": "Hardcore",
+                                        "difficulty": 4,
+                                        "childs": [
+                                            {
+                                                "name": "Impossible",
+                                                "lore": "Impossible",
+                                                "difficulty": 5
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "Normal",

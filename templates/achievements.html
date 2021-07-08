@@ -13,15 +13,16 @@
         {% for a in achievements %}
             <li class="{{ 'active' if loop.index-1 == category else '' }}"><a title="{{ a.lore }}" href="/achievements/{{ loop.index-1 }}">{{ a.name }}</a></li>
         {% endfor %}
-        <div class="difficulties">
-            <div class="dot" style="background-color: var(--difficulty-1);"></div>&nbsp;Facile<br/>
-            <div class="dot" style="background-color: var(--difficulty-2);"></div>&nbsp;Moyen<br/>
-            <div class="dot" style="background-color: var(--difficulty-3);"></div>&nbsp;Difficile<br/>
-            <div class="dot" style="background-color: var(--difficulty-4);"></div>&nbsp;Hardcore<br/>
-            <div class="dot" style="background-color: var(--difficulty-5);"></div>&nbsp;Impossible
-        </div>
     </div>
     
+    <div class="difficulties">
+        <div class="dot" style="background-color: var(--difficulty-1);"></div>&nbsp;Facile<br/>
+        <div class="dot" style="background-color: var(--difficulty-2);"></div>&nbsp;Moyen<br/>
+        <div class="dot" style="background-color: var(--difficulty-3);"></div>&nbsp;Difficile<br/>
+        <div class="dot" style="background-color: var(--difficulty-4);"></div>&nbsp;Hardcore<br/>
+        <div class="dot" style="background-color: var(--difficulty-5);"></div>&nbsp;Impossible
+    </div>
+
     <div class="tree-div">
 
     </div>

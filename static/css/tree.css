@@ -1,6 +1,8 @@
 .tree-div {
-    margin: 20px;
+    margin: 0;
+    padding: 20px;
     grid-area: main;
+    overflow: auto;
 }
 
 *, *:before, *:after {

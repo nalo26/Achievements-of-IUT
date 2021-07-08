@@ -35,3 +35,32 @@ p.title {
     text-decoration: underline;
     margin: 0;
 }
+
+.difficulties {
+    padding: 10px;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--dark-link); 
+    border-radius: 5px;
+}
