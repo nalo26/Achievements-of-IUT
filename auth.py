@@ -4,24 +4,28 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from db import get_db
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__)
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    data = {}
     if request.method == 'POST':
-        firstname = request.form['first_name']
-        lastname = request.form['last_name']
+        data = request.form.to_dict(False)
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
         password = request.form['password']
+        confirm = request.form['confirm']
         db = get_db()
         error = None
 
         if not firstname: error = 'Vous devez rentrer un prénom !'
         elif not lastname: error = 'Vous devez rentrer un nom !'
         elif not password: error = 'Vous devez rentrer un mot de passe !'
+        elif password != confirm: error = 'Les mots de passe ne sont pas identiques !'
         elif db.execute(
             'SELECT id FROM user WHERE firstname = ? and lastname = ?', (firstname, lastname,)
         ).fetchone() is not None:
-            error = f"L'utilisateur {firstname} {lastname} existe déjà !"
+            error = f"L'utilisateur•rice \"{firstname} {lastname}\" existe déjà !"
 
         if error is None:
             db.execute(
@@ -31,16 +35,18 @@ def register():
             db.commit()
             return redirect(url_for('auth.login'))
 
-        flash(error)
+        flash(error, 'error')
 
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', title="Inscription", data=data)
 
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    data = {}
     if request.method == 'POST':
-        firstname = request.form['first_name']
-        lastname = request.form['last_name']
+        data = request.form.to_dict(False)
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
         password = request.form['password']
         db = get_db()
         error = None
@@ -51,7 +57,7 @@ def login():
         if user is None:
             if not firstname: error = 'Vous devez rentrer un prénom !'
             elif not lastname: error = 'Vous devez rentrer un nom !'
-            else: error = f"L'utilisateur {firstname} {lastname} n'est pas inscrit !"
+            else: error = f"L'utilisateur•rice \"{firstname} {lastname}\" n'est pas inscrit•e !"
         elif not check_password_hash(user['password'], password):
             error = 'Mot de passe incorrect !'
 
@@ -60,9 +66,9 @@ def login():
             session['user_id'] = user['id']
             return redirect(url_for('achievements'))
 
-        flash(error)
+        flash(error, 'error')
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', title="Connexion", data=data)
 
 
 @bp.route('/logout')

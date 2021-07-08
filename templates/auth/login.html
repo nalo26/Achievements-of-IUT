@@ -1,0 +1,6 @@
+{% extends 'auth/base_auth.html' %}
+
+{% block text %}
+    Pas encore inscrit•e ?<br/>
+    <a href="{{ url_for('auth.register') }}">Inscrivez-vous</a> !
+{% endblock %}

@@ -108,3 +108,8 @@
 .tree > div:after {
     border: none !important;
 }
+
+p.title {
+    text-decoration: underline;
+    margin: 0;
+}

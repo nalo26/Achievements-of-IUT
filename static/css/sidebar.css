@@ -41,3 +41,18 @@
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
 }
+
+.difficulties {
+    padding: 10px;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}

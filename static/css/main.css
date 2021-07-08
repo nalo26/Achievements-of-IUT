@@ -31,26 +31,33 @@ body {
                     / fit-content(100%) auto;
 }
 
-p.title {
-    text-decoration: underline;
-    margin: 0;
+.flash {
+    margin-bottom: 10px;
+    height: fit-content;
+    padding: .75rem 1.25rem;
+    border: 2px solid transparent;
+    border-radius: .50rem;
 }
-
-.difficulties {
-    padding: 10px;
-    margin-top: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.flash-message, .flash-info {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
 }
-
-.dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+.flash-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
 }
-
+.flash-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.flash-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
 /* Scrollbar */
 
 /* width */

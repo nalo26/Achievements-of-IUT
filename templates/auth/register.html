@@ -1,15 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'auth/base_auth.html' %}
 
-{% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
+{% block field %}
+<div class="field">
+    <label for="confirm">Confirmer le mot de passe</label><br/>
+    <input type="password" name="confirm" id="confirm" required>
+</div>
 {% endblock %}
 
-{% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
+{% block text %}
+    Déjà inscrit•e ?<br/>
+    <a href="{{ url_for('auth.login') }}">Connectez-vous</a> !
 {% endblock %}
