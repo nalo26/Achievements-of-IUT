@@ -3,10 +3,8 @@
 }
 
 .navbar {
+    grid-area: head;
     background: var(--secondary-color);
-    grid-column: 1 / 3;
-    grid-row: 1;
-    height: fit-content;
 }
 
 .navbar li {

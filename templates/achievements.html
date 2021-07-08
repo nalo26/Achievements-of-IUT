@@ -7,14 +7,21 @@
 </head>
 
 <body>
+    {% include "navbar.html" %}
+
     <div class="sidebar">
         {% for a in achievements %}
             <li class="{{ 'active' if loop.index-1 == category else '' }}"><a title="{{ a.lore }}" href="/achievements/{{ loop.index-1 }}">{{ a.name }}</a></li>
         {% endfor %}
+        <div class="difficulties">
+            <div class="dot" style="background-color: var(--difficulty-1);"></div>&nbsp;Facile<br/>
+            <div class="dot" style="background-color: var(--difficulty-2);"></div>&nbsp;Moyen<br/>
+            <div class="dot" style="background-color: var(--difficulty-3);"></div>&nbsp;Difficile<br/>
+            <div class="dot" style="background-color: var(--difficulty-4);"></div>&nbsp;Hardcore<br/>
+            <div class="dot" style="background-color: var(--difficulty-5);"></div>&nbsp;Impossible
+        </div>
     </div>
     
-    {% include "navbar.html" %}
-
     <div class="tree-div">
 
     </div>
@@ -38,7 +45,7 @@
                 label.className = "label";
                 let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
                 label.style.borderColor = color;
-                label.innerHTML = "<p>" + a.name + "</p><i>" + a.lore + "</i>";
+                label.innerHTML = "<p class='title'>" + a.name + "</p><i>" + a.lore + "</i>";
                 label.addEventListener("click", function(e) {
                     label.classList.toggle("clicked");
                     if(label.classList.contains("clicked")) {
@@ -46,7 +53,7 @@
                         color.trim().substring(4, color.length-1).split(",").forEach(i => c.push(parseInt(i)-50));
                         label.style.backgroundColor = "rgb(" + c.join(", ") + ")";
                     } else {
-                        label.style.backgroundColor = "transparent";
+                        label.style.backgroundColor = "";
                     }
                 });
                 
