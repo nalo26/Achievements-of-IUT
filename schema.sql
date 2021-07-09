@@ -5,5 +5,6 @@ CREATE TABLE user (
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
     password TEXT NOT NULL,
+    year INTEGER NOT NULL,
     score INTEGER NOT NULL
 );

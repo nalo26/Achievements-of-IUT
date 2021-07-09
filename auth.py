@@ -15,6 +15,7 @@ def register():
         lastname = request.form['lastname']
         password = request.form['password']
         confirm = request.form['confirm']
+        year = int(request.form['year'])
         db = get_db()
         error = None
 
@@ -29,11 +30,11 @@ def register():
 
         if error is None:
             db.execute(
-                'INSERT INTO user (firstname, lastname, password, score) VALUES (?, ?, ?, ?)',
-                (firstname, lastname, generate_password_hash(password), 0)
+                'INSERT INTO user (firstname, lastname, password, score, year) VALUES (?, ?, ?, ?, ?)',
+                (firstname, lastname, generate_password_hash(password), 0, year)
             )
             db.commit()
-            flash("Inscription complète, veuillez vous connecter.", 'success')
+            flash("Inscription réussie, veuillez vous connecter.", 'success')
             return redirect(url_for('auth.login'))
 
         flash(error, 'error')
@@ -75,7 +76,7 @@ def login():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('achievements'))
+    return redirect(url_for('achievements', cat_id=0))
 
 
 @bp.before_app_request

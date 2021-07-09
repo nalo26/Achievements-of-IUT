@@ -25,13 +25,16 @@ body {
     color: #8c9bd6;
 }
 
-.auth input {
+.auth input, .auth select {
 	font-family: "Exo 2";
 	font-size: 15px;
     margin-top: 5px;
     height: 30px;
     border: 2px solid var(--light-link);
     border-radius: 7px;
+}
+.auth select {
+    width: 100%;
 }
 
 .auth .field {
