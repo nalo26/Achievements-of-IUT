@@ -24,7 +24,7 @@ def main():
 @app.route('/achievements/<string:cat_name>')
 def achievements_name(cat_name):
     cat_name = format_string(cat_name)
-    for i, d in enumerate(read_json(achievements_path)):
+    for i, d in enumerate(read_achievements()):
         if cat_name in d["aliases"]: return redirect(f'/achievements/{i}')
     return redirect('/achievements/0')
 
@@ -36,14 +36,16 @@ def achievement(cat_id):
 # ---------------------------------------------------------------------------------------
 @app.route('/achievements/<int:cat_id>')
 def achievements(cat_id):
-    achievements_data = read_json(achievements_path)
+    achievements_data = read_achievements()
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
     session['page'] = cat_id
     
     return render_template('achievements.html', achievements=achievements_data, category=cat_id)
 # ---------------------------------------------------------------------------------------
 
-
+@app.route('/test')
+def test():
+    return str(read_achievements())
 @app.route('/leaderboard')
 def leaderboard():
     return "ahah leaderboard goes brrrr"
@@ -63,13 +65,23 @@ def error_page(error):
 def format_string(string):
     return string.lower().replace(" ", "_")
 
-def read_json(path):
+def read_achievements(parent_id=None):
     data = []
-    with open(path, 'r', encoding="utf-8") as mf:
-        data = json.load(mf)
-    mf.close()
+    base = db.get_db()
+    query = "SELECT * FROM achievement WHERE parent_id "
+    query += "is null" if parent_id is None else f"= {parent_id}"
+    for elem in base.execute(query).fetchall():
+        ach = {
+            "id": elem['id_achievement'],
+            "name": elem['name'],
+            "lore": elem['lore'],
+            "difficulty": elem['difficulty'],
+        }
+        childs = read_achievements(elem['id_achievement'])
+        if len(childs) > 0: ach['childs'] = childs
+        data.append(ach)
     return data
-
+    
 
 if __name__ == '__main__':
     app.run(debug = True)
