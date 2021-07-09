@@ -95,7 +95,7 @@
     margin-top: -30px;
 }
 
-.label:hover {
+.label:hover:not(.auto) {
     background-color: var(--secondary-color);
     cursor: pointer;
     transition-duration: 0.3s;
@@ -112,4 +112,8 @@
 p.title {
     text-decoration: underline;
     margin: 0;
+}
+
+.auto:hover {
+    cursor: not-allowed;
 }

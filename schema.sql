@@ -16,6 +16,7 @@ CREATE TABLE achievement(
    name TEXT NOT NULL,
    lore TEXT DEFAULT '',
    difficulty INTEGER NOT NULL,
+   auto_complete BOOLEAN NOT NULL CHECK (auto_complete in (0, 1)) DEFAULT 0,
    parent_id INTEGER,
    FOREIGN KEY(parent_id) REFERENCES achievement(id_achievement)
 );
@@ -24,7 +25,7 @@ CREATE TABLE done(
    id_user INTEGER,
    id_achievement INTEGER,
    PRIMARY KEY(id_user, id_achievement),
-   FOREIGN KEY(id_user) REFERENCES userr(id_user),
+   FOREIGN KEY(id_user) REFERENCES user(id_user),
    FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
 );
 

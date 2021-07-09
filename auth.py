@@ -30,8 +30,8 @@ def register():
 
         if error is None:
             db.execute(
-                'INSERT INTO user (firstname, lastname, password, score, year) VALUES (?, ?, ?, ?, ?)',
-                (firstname, lastname, generate_password_hash(password), 0, year)
+                'INSERT INTO user (firstname, lastname, password, year) VALUES (?, ?, ?, ?)',
+                (firstname, lastname, generate_password_hash(password), year)
             )
             db.commit()
             flash("Inscription réussie, veuillez vous connecter.", 'success')

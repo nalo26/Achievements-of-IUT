@@ -47,17 +47,22 @@
                 label.className = "label";
                 let color = getComputedStyle(document.documentElement).getPropertyValue("--difficulty-" + a.difficulty);
                 label.style.borderColor = color;
+                if(a.complete) {
+                    label.classList.add("complete");
+                    label.style.backgroundColor = compute_color(color);
+                }
                 label.innerHTML = "<p class='title'>" + a.name + "</p><i>" + a.lore + "</i>";
-                label.addEventListener("click", function(e) {
-                    label.classList.toggle("clicked");
-                    if(label.classList.contains("clicked")) {
-                        let c = [];
-                        color.trim().substring(4, color.length-1).split(",").forEach(i => c.push(parseInt(i)-50));
-                        label.style.backgroundColor = "rgb(" + c.join(", ") + ")";
-                    } else {
-                        label.style.backgroundColor = "";
-                    }
-                });
+                if(a.auto_complete) label.classList.add("auto");
+                else {
+                    label.addEventListener("click", function(e) {
+                        label.classList.toggle("complete");
+                        if(label.classList.contains("complete")) {
+                            label.style.backgroundColor = compute_color(color);
+                        } else {
+                            label.style.backgroundColor = "";
+                        }
+                    });
+                }
                 
                 entry.appendChild(label);
                 parent_node.appendChild(entry);
@@ -69,6 +74,12 @@
                     tree_builder(a.childs, next);
                 }
             }
+        }
+
+        function compute_color(color) {
+            let c = [];
+            color.trim().substring(4, color.length-1).split(",").forEach(i => c.push(parseInt(i)-50));
+            return "rgb(" + c.join(", ") + ")";
         }
     </script>
 {% endblock %}
