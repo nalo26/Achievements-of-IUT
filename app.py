@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, g
+from flask import Flask, redirect, render_template, session, g, request
 import os
 
 import db
@@ -40,6 +40,23 @@ def achievements(cat_id):
     
     return render_template('achievements.html', achievements=achievements_data, category=cat_id)
 # ---------------------------------------------------------------------------------------
+
+
+@app.route('/save', methods=['POST'])
+def save_score():
+    if not g.user: return {'success': False}, 409, {'ContentType':'application/json'}
+    
+    data = request.json
+    if g.user['id_user'] != data['user']: return {'success': False}, 409, {'ContentType':'application/json'}
+    
+    base = db.get_db()
+    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (data['achievement'],)).fetchone()
+    if bool(ach['auto_complete']): return {'success': False}, 409, {'ContentType':'application/json'}
+    
+    base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (data['user'], data['achievement'],))
+    base.commit()
+    
+    return {'success': True}, 200, {'ContentType':'application/json'}
 
 @app.route('/test')
 def test():

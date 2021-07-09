@@ -24,7 +24,7 @@ def register():
         elif not password: error = 'Vous devez rentrer un mot de passe !'
         elif password != confirm: error = 'Les mots de passe ne sont pas identiques !'
         elif db.execute(
-            'SELECT id FROM user WHERE firstname = ? and lastname = ?', (firstname, lastname,)
+            'SELECT id_user FROM user WHERE firstname = ? and lastname = ?', (firstname, lastname,)
         ).fetchone() is not None:
             error = f"L'utilisateur•rice \"{firstname} {lastname}\" existe déjà !"
 
@@ -65,7 +65,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['id_user'] = user['id_user']
             return redirect(url_for('achievements', cat_id=0))
 
         flash(error, 'error')
@@ -83,13 +83,13 @@ def logout():
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    id_user = session.get('id_user')
 
-    if user_id is None:
+    if id_user is None:
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
+            'SELECT * FROM user WHERE id_user = ?', (id_user,)
         ).fetchone()
 
         
