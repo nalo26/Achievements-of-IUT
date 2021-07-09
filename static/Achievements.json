@@ -24,7 +24,7 @@
                         "difficulty": 1,
                         "childs": [
                             {
-                                "name": "Algortithms master",
+                                "name": "Algorithms master",
                                 "lore": "Finir à temps tous les TP d'algorithmique",
                                 "difficulty": 3
                             }
@@ -688,64 +688,5 @@
                 "difficulty": 5
             }
         ]        
-    },
-    {   "name": "Tests", 
-        "lore": "Pour faire des tests tkt",
-        "difficulty": 1,
-        "childs": [
-            {
-                "name": "Easy",
-                "lore": "Easy",
-                "difficulty": 1,
-                "childs": [
-                    {
-                        "name": "Normal",
-                        "lore": "Normal",
-                        "difficulty": 2,
-                        "childs": [
-                            {
-                                "name": "Hard",
-                                "lore": "Hard",
-                                "difficulty": 3,
-                                "childs": [
-                                    {
-                                        "name": "Hardcore",
-                                        "lore": "Hardcore",
-                                        "difficulty": 4,
-                                        "childs": [
-                                            {
-                                                "name": "Impossible",
-                                                "lore": "Impossible",
-                                                "difficulty": 5
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Normal",
-                "lore": "Normal",
-                "difficulty": 2
-            },
-            {
-                "name": "Hard",
-                "lore": "Hard",
-                "difficulty": 3
-            },
-            {
-                "name": "Hardcore",
-                "lore": "Hardcore",
-                "difficulty": 4
-            },
-            {
-                "name": "Impossible",
-                "lore": "Impossible",
-                "difficulty": 5
-            }
-        ]
     }
 ]
