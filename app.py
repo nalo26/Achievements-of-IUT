@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, session
 import json
 import os
 import db, auth
@@ -38,10 +38,20 @@ def achievement(cat_id):
 def achievements(cat_id):
     achievements_data = read_json(achievements_path)
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
+    session['page'] = cat_id
     
     return render_template('achievements.html', achievements=achievements_data, category=cat_id)
 # ---------------------------------------------------------------------------------------
 
+
+@app.route('/leaderboard')
+def leaderboard():
+    return "ahah leaderboard goes brrrr"
+
+@app.route('/profile')
+@auth.login_required
+def profile():
+    return "ahah here's your profile brrrr"
 
 @app.errorhandler(401)
 @app.errorhandler(404)

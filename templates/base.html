@@ -8,7 +8,14 @@
 <body>
     <nav class="navbar">
         <li><a href="/achievements">Achievements</a></li>
-        <li style="float:right"><a href="/leaderboard">Leaderboard</a></li>
+        <li style="float:right"><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
+        {% if g.user %}
+            <li style="float:right"><a href="{{ url_for('auth.logout') }}">Déconnexion</a></li>
+            <li style="float:right"><a href="{{ url_for('profile') }}">Profil</a></li>
+        {% else %}
+            <li style="float:right"><a href="{{ url_for('auth.register') }}">Inscription</a></li>
+            <li style="float:right"><a href="{{ url_for('auth.login') }}">Connexion</a></li>
+        {% endif %}
     </nav>
 
     {% block content %}{% endblock %}

@@ -75,8 +75,10 @@ def login():
 
 @bp.route('/logout')
 def logout():
+    page = session['page']
+    if page is None: page = 0
     session.clear()
-    return redirect(url_for('achievements', cat_id=0))
+    return redirect(url_for('achievements', cat_id=page))
 
 
 @bp.before_app_request
