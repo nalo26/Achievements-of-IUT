@@ -1,3 +1,4 @@
+from sqlite3.dbapi2 import OperationalError
 from flask import Flask, redirect, render_template, session, g, request
 import os
 
@@ -47,14 +48,23 @@ def save_score():
     if not g.user: return {'success': False}, 409, {'ContentType':'application/json'}
     
     data = request.json
-    if g.user['id_user'] != data['user']: return {'success': False}, 409, {'ContentType':'application/json'}
+    if g.user['id_user'] != data.get('user'): return {'success': False}, 409, {'ContentType':'application/json'}
+    
+    if data.get('type') not in ('add', 'remove'): return {'success': False}, 409, {'ContentType':'application/json'}
     
     base = db.get_db()
-    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (data['achievement'],)).fetchone()
+    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (data.get('achievement'),)).fetchone()
     if bool(ach['auto_complete']): return {'success': False}, 409, {'ContentType':'application/json'}
     
-    base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (data['user'], data['achievement'],))
-    base.commit()
+    try:
+        if data.get('type') == "add":
+            base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (data.get('user'), data.get('achievement'),))
+            base.commit()
+        if data.get('type') == "remove":
+            base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (data.get('user'), data.get('achievement'),))
+            base.commit()
+    except OperationalError:
+        return {'success': False}, 500, {'ContentType':'application/json'}
     
     return {'success': True}, 200, {'ContentType':'application/json'}
 
