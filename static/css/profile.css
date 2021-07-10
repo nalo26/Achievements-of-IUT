@@ -1,0 +1,29 @@
+body {
+    grid-template:  [header-left] "head" fit-content(100%) [header-right]
+                    [main-left]   "main" auto              [main-right]
+                    / 100%;
+}
+
+.dif {
+    display: inline-block;
+    margin-block: 0;
+}
+
+.info {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: 20px;
+    margin: 20px;
+    width: 400px;
+}
+
+h1 {
+    margin: 0;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}

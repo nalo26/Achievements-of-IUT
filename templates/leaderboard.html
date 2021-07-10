@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Classement • {{ g.user.firstname }} {{ g.user.lastname}}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="sidebar">
+        {# {% for a in achievements %}
+            <li class="{{ 'active' if loop.index-1 == category else '' }}"><a title="{{ a.lore }}" href="/achievements/{{ loop.index-1 }}">{{ a.name }}</a></li>
+        {% endfor %} #}
+    </div>
+
+    <div class="leaderboard">
+    </div>
+{% endblock %}

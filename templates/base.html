@@ -11,7 +11,7 @@
         <li style="float:right"><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
         {% if g.user %}
             <li style="float:right"><a href="{{ url_for('auth.logout') }}">Déconnexion</a></li>
-            <li style="float:right"><a href="{{ url_for('profile') }}">Profil</a></li>
+            <li style="float:right"><a href="{{ url_for('profile', user_id=g.user.id_user) }}">Profil</a></li>
         {% else %}
             <li style="float:right"><a href="{{ url_for('auth.register') }}">Inscription</a></li>
             <li style="float:right"><a href="{{ url_for('auth.login') }}">Connexion</a></li>

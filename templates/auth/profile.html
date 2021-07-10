@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Profil • {{ g.user.firstname }} {{ g.user.lastname}}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div style="margin: auto;">
+        <div class="info">
+            <h1>{{ user.firstname }} {{ user.lastname}}</h1>
+        </div>
+        <div class="info">
+            <h2>Informations</h2>
+            <p>Promotion {{ user.year }}</p>
+            <p>Ici depuis le {{ datejoin.strftime('%d/%m/%Y') }}</p>
+        </div>
+
+        <div class="info">
+            <h2>Statistiques</h2>
+            <p>Score total : <strong>{{ user.score }}</strong></p>
+            <p class="dif">Achievements complétés : <strong>{{ ach_complete }} / {{ ach_amount }}</strong> (</p>
+                {%- for d in difficulties -%}
+                    <p class="dif" style="color: var(--difficulty-{{ loop.index }});">{{ d }}</p><p class="dif">{{ '' if loop.last else ',&nbsp;'|safe }}</p>
+                {%- endfor -%}
+            <p class="dif">)</p>
+            <p>Classement général : <strong>{{ rank }} / {{ user_amount }}</strong></p>
+            <p>Classement promotion {{ user.year }} : <strong>{{ year_rank }} / {{ year_user_amount }}</strong></p>
+        </div>
+    </div>
+{% endblock %}

@@ -8,6 +8,7 @@ CREATE TABLE user (
     lastname TEXT NOT NULL,
     password TEXT NOT NULL,
     year INTEGER NOT NULL,
+    joindate DATETIME DEFAULT CURRENT_TIMESTAMP,
     score INTEGER DEFAULT 0
 );
 

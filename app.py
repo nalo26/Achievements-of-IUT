@@ -1,6 +1,7 @@
 from sqlite3.dbapi2 import OperationalError
-from flask import Flask, redirect, render_template, session, g, request
+from flask import Flask, redirect, render_template, session, g, request, abort
 import os
+from datetime import datetime
 
 import db
 import auth
@@ -17,14 +18,6 @@ db.init_app(app)
 @app.route('/achievement')
 @app.route('/achievements')
 def main():
-    return redirect(f'/achievements/0')
-
-@app.route('/achievement/<string:cat_name>')
-@app.route('/achievements/<string:cat_name>')
-def achievements_name(cat_name):
-    cat_name = format_string(cat_name)
-    for i, d in enumerate(read_achievements()):
-        if cat_name in d["aliases"]: return redirect(f'/achievements/{i}')
     return redirect('/achievements/0')
 
 @app.route('/achievement/<int:cat_id>')
@@ -68,17 +61,39 @@ def save_score():
     
     return {'success': True}, 200, {'ContentType':'application/json'}
 
-@app.route('/test')
-def test():
-    return str(read_achievements()[0])
+
 @app.route('/leaderboard')
 def leaderboard():
     return "ahah leaderboard goes brrrr"
 
-@app.route('/profile')
-@auth.login_required
-def profile():
-    return "ahah here's your profile brrrr"
+
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    base = db.get_db()
+    user = base.execute("SELECT * FROM user WHERE id_user = ?", (user_id,)).fetchone()
+    if user is None: abort(404, f"Aucun utilisateur avec l'ID {user_id} n'a été trouvé !")
+
+    datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
+    ach_complete = len(base.execute("SELECT * FROM done WHERE id_user = ?", (user_id,)).fetchall())
+    ach_amount = len(base.execute("SELECT * FROM achievement").fetchall())
+    
+    users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score").fetchall()]
+    rank = users.index(user_id) + 1
+    
+    year_users = [r['id_user'] for r in base.execute("SELECT id_user FROM user WHERE year = ? ORDER BY score", (user['year'],)).fetchall()]
+    year_rank = year_users.index(user_id) + 1
+    
+    req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
+                       "FROM done JOIN achievement USING(id_achievement) " + \
+                       "WHERE id_user = ? GROUP BY difficulty " + \
+                       "ORDER BY difficulty", (user_id,))
+    difficulties = [0]*5
+    for r in req.fetchall():
+        difficulties[r['difficulty']-1] = r['amount']
+    
+    return render_template('auth/profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
+                           ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users))
+
 
 @app.errorhandler(401)
 @app.errorhandler(404)
