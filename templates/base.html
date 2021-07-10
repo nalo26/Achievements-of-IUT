@@ -10,8 +10,12 @@
         <li><a href="/achievements">Achievements</a></li>
         <li style="float:right"><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
         {% if g.user %}
-            <li style="float:right"><a href="{{ url_for('auth.logout') }}">Déconnexion</a></li>
-            <li style="float:right"><a href="{{ url_for('profile', user_id=g.user.id_user) }}">Profil</a></li>
+            <li style="float:right"><a href="{{ url_for('profile', user_id=g.user.id_user) }}">{{ g.user.firstname }} {{ g.user.lastname }} ▼</a>
+                <ul>
+                    <li><a href="{{ url_for('profile', user_id=g.user.id_user) }}">Profil</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">Déconnexion</a></li>
+                </ul>
+            </li>
         {% else %}
             <li style="float:right"><a href="{{ url_for('auth.register') }}">Inscription</a></li>
             <li style="float:right"><a href="{{ url_for('auth.login') }}">Connexion</a></li>

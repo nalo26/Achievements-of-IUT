@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Profil • {{ g.user.firstname }} {{ g.user.lastname}}{% endblock %}
+{% block title %}Profil • {{ user.firstname }} {{ user.lastname}}{% endblock %}
 
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile.css') }}">
