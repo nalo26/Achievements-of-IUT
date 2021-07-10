@@ -62,9 +62,24 @@ def save_score():
     return {'success': True}, 200, {'ContentType':'application/json'}
 
 
-@app.route('/leaderboard')
-def leaderboard():
-    return "ahah leaderboard goes brrrr"
+@app.route('/leaderboard', defaults={'year': None})
+@app.route('/leaderboard/<int:year>')
+def leaderboard(year):
+    now = datetime.now()
+    month = now.month
+    maxyear = now.year
+    if month < 7: maxyear -= 1
+    if year is not None and (year < 2017 or year > maxyear): return redirect('/leaderboard')
+    
+    base = db.get_db()
+    users = []
+    
+    if year is None:
+        users = base.execute("SELECT * FROM user ORDER BY score").fetchall()
+    else:
+        users = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score", (year,)).fetchall()
+        
+    return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear)
 
 
 @app.route('/profile/<int:user_id>')
