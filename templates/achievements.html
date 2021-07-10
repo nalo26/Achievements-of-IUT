@@ -52,7 +52,7 @@
                     label.style.backgroundColor = compute_color(color);
                 }
                 label.innerHTML = "<p class='title'>" + a.name + "</p><i>" + a.lore + "</i>";
-                if(a.auto_complete) label.classList.add("auto");
+                if(a.auto_complete || "{{ g.user }}" === "None") label.classList.add("auto");
                 else {
                     label.addEventListener("click", function(e) {
                         label.classList.toggle("complete");
