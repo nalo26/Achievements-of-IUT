@@ -19,14 +19,28 @@
 
         <div class="info">
             <h2>Statistiques</h2>
-            <p>Score total : <strong>{{ user.score }}</strong></p>
-            <p class="dif">Achievements complétés : <strong>{{ ach_complete }} / {{ ach_amount }}</strong> (</p>
-                {%- for d in difficulties -%}
-                    <p class="dif" style="color: var(--difficulty-{{ loop.index }});">{{ d }}</p><p class="dif">{{ '' if loop.last else ',&nbsp;'|safe }}</p>
-                {%- endfor -%}
-            <p class="dif">)</p>
-            <p>Classement général : <strong>{{ rank }} / {{ user_amount }}</strong></p>
-            <p>Classement promotion {{ user.year }} : <strong>{{ year_rank }} / {{ year_user_amount }}</strong></p>
+            <table>
+                <tr>
+                    <td>Score total :</td>
+                    <td class="value">{{ user.score }}</td>
+                </tr>
+                <tr>
+                    <td>Achievements complétés :</td>
+                    <td class="value">{{ ach_complete }} / {{ ach_amount }} (
+                        {%- for d in difficulties -%}
+                            <p class="dif" style="color: var(--difficulty-{{ loop.index }});">{{ d }}</p><p class="dif">{{ '' if loop.last else ',&nbsp;'|safe }}</p>
+                        {%- endfor -%}
+                        )
+                    </td>
+                </tr>
+                <tr>
+                    <td>Classement général :</td>
+                    <td class="value">{{ rank }} / {{ user_amount }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Classement promotion {{ user.year }} :</td>
+                    <td class="value">{{ year_rank }} / {{ year_user_amount }}</td>
+            </table>
         </div>
     </div>
 {% endblock %}
