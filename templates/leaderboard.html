@@ -20,13 +20,15 @@
             <thead>
                 <th scope="col">Rang</th>
                 <th scope="col">Étudiant•e</th>
+                <th scope="col">Promotion</th>
                 <th scope="col">Score</th>
             </thead>
             <tbody>
                 {% for user in users %}
                     <tr>
                         <th scope="row">#{{ loop.index }}</td>
-                        <td>{{ user.firstname }} {{user.lastname}} ({{ user.year }})</td>
+                        <td><a href="{{ url_for('profile', user_id=user.id_user) }}">{{ user.firstname }} {{user.lastname}}</a></td>
+                        <td><a href="{{ url_for('leaderboard', year=user.year) }}">{{ user.year }}</a></td>
                         <td>{{ user.score }}</td>
                     </tr>
                 {% endfor %}
