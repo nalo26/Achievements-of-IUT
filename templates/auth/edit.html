@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Paramètres • {{ g.user.firstname }} {{ g.user.lastname}}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div style="margin: auto;">
+        {% for cat, msg in get_flashed_messages(True) %}
+            <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+        <div class="auth">
+        <p style="margin: -20px 0 20px -80px;">◀
+            <a href="{{ url_for('profile', user_id=g.user.id_user) }}"> Retour au profil</a>
+        </p>
+            <form method="post">
+                <h1 style="margin-bottom: 0;">Changer le</h1>
+                <h1>mot de passe</h1>
+                <div class="field">
+                    <label for="current">Mot de passe</label><br/>
+                    <input type="password" name="current" id="current" required>
+                </div>
+                <div class="field">
+                    <label for="new">Nouveau mot de passe</label><br/>
+                    <input type="password" name="new" id="new" required>
+                </div>
+                <div class="field">
+                    <label for="confirm">Confirmer le mot de passe</label><br/>
+                    <input type="password" name="confirm" id="confirm" required>
+                </div>
+                <input id="submit" type="submit" value="Valider">
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -6,6 +6,17 @@ from db import get_db
 
 bp = Blueprint('auth', __name__)
 
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     data = {}
@@ -72,6 +83,33 @@ def login():
 
     return render_template('auth/login.html', title="Connexion", data=data)
 
+@bp.route('/edit', methods=('GET', 'POST'))
+@login_required
+def edit_profile():
+    if request.method == 'POST':
+        current_pwd = request.form['current']
+        new_pwd = request.form['new']
+        confirm_pwd = request.form['confirm']
+        db = get_db()
+        error = None
+        
+        if not current_pwd: error = "Vous devez rentrer votre mot de passe actuel !"
+        elif not new_pwd: error = "Vous devez rentrer un nouveau mot de passe !"
+        elif not confirm_pwd: error = "Vous devez confirmer le nouveau mot de passe !"
+        elif not check_password_hash(g.user['password'], current_pwd):
+            error = "Erreur dans votre mot de passe actuel !"
+        elif check_password_hash(g.user['password'], new_pwd):
+            error = "Vous ne pouvez pas rentrer le même mot de passe !"
+        elif new_pwd != confirm_pwd: error = "Les mots de passe ne sont pas identiques !"
+        
+        if error is None:
+            db.execute('UPDATE user SET password = ? WHERE id_user = ?',
+                      (generate_password_hash(new_pwd), g.user['id_user'],))
+            db.commit()
+            flash("Changement effectué avec succès", 'success')
+        else: flash(error, 'error')
+        
+    return render_template('auth/edit.html')
 
 @bp.route('/logout')
 def logout():
@@ -91,14 +129,3 @@ def load_logged_in_user():
         g.user = get_db().execute(
             'SELECT * FROM user WHERE id_user = ?', (id_user,)
         ).fetchone()
-
-        
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view

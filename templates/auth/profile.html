@@ -10,7 +10,11 @@
     <div style="margin: auto;">
         <div class="info">
             <h1>{{ user.firstname }} {{ user.lastname}}</h1>
+            {% if g.user and g.user.id_user == user.id_user %}
+                <p class="pwd_link"><a href="{{ url_for('auth.edit_profile') }}">Modifier le mot de passe</a></p>
+            {% endif %}
         </div>
+
         <div class="info">
             <h2>Informations</h2>
             <p>Promotion {{ user.year }}</p>
