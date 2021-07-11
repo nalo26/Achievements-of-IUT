@@ -19,6 +19,7 @@ def login_required(view):
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    session['page'] = "/register"
     data = {}
     if request.method == 'POST':
         data = request.form.to_dict(False)
@@ -55,6 +56,7 @@ def register():
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    session['page'] = "/login"
     data = {}
     if request.method == 'POST':
         data = request.form.to_dict(False)
@@ -114,9 +116,9 @@ def edit_profile():
 @bp.route('/logout')
 def logout():
     page = session['page']
-    if page is None: page = 0
+    if page is None: page = url_for("/achievements", cat_id=0)
     session.clear()
-    return redirect(url_for('achievements', cat_id=page))
+    return redirect(page)
 
 
 @bp.before_app_request

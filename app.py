@@ -77,8 +77,10 @@ def leaderboard(year):
     users = []
     
     if year is None:
+        session['page'] = "/leaderboard"
         users = base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()
     else:
+        session['page'] = f"/leaderboard/{year}"
         users = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
         
     return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear)
@@ -86,6 +88,7 @@ def leaderboard(year):
 
 @app.route('/profile/<int:user_id>')
 def profile(user_id):
+    session['page'] = f"/profile/{user_id}"
     base = db.get_db()
     user = base.execute("SELECT * FROM user WHERE id_user = ?", (user_id,)).fetchone()
     if user is None: abort(404, f"Aucun utilisateur avec l'ID {user_id} n'a été trouvé !")
@@ -118,9 +121,6 @@ def profile(user_id):
 def error_page(error):
     return f"Error {error.code}", error.code
 
-
-def format_string(string):
-    return string.lower().replace(" ", "_")
 
 def read_achievements(parent_id=None):
     data = []
