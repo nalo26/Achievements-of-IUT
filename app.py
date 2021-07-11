@@ -52,9 +52,11 @@ def save_score():
     try:
         if data.get('type') == "add":
             base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (data.get('user'), data.get('achievement'),))
+            base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], data.get('user'),))
             base.commit()
         if data.get('type') == "remove":
             base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (data.get('user'), data.get('achievement'),))
+            base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], data.get('user'),))
             base.commit()
     except OperationalError:
         return {'success': False}, 500, {'ContentType':'application/json'}
@@ -75,9 +77,9 @@ def leaderboard(year):
     users = []
     
     if year is None:
-        users = base.execute("SELECT * FROM user ORDER BY score").fetchall()
+        users = base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()
     else:
-        users = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score", (year,)).fetchall()
+        users = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
         
     return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear)
 
@@ -92,10 +94,10 @@ def profile(user_id):
     ach_complete = len(base.execute("SELECT * FROM done WHERE id_user = ?", (user_id,)).fetchall())
     ach_amount = len(base.execute("SELECT * FROM achievement").fetchall())
     
-    users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score").fetchall()]
+    users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()]
     rank = users.index(user_id) + 1
     
-    year_users = [r['id_user'] for r in base.execute("SELECT id_user FROM user WHERE year = ? ORDER BY score", (user['year'],)).fetchall()]
+    year_users = [r['id_user'] for r in base.execute("SELECT id_user FROM user WHERE year = ? ORDER BY score DESC", (user['year'],)).fetchall()]
     year_rank = year_users.index(user_id) + 1
     
     req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
