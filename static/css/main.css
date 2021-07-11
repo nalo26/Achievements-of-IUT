@@ -31,6 +31,13 @@ body {
                     / fit-content(100%) auto;
 }
 
+#logo {
+    height: 46px;
+    margin-top: 5px;
+    margin-bottom: -15px;
+    margin-right: 10px;
+}
+
 .flash {
     margin-bottom: 10px;
     height: fit-content;

@@ -8,7 +8,7 @@ import auth
 
 app = Flask(__name__, instance_relative_config = True)
 app.config.from_mapping(
-    SECRET_KEY = 'dev',
+    SECRET_KEY = os.urandom(16),
     DATABASE = os.path.join(app.instance_path, 'database.sqlite'),
 )
 app.register_blueprint(auth.bp)

@@ -1,5 +1,6 @@
 <head>
     <title>[IUT RPG] {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     {% block styles %}{% endblock %}
@@ -7,6 +8,7 @@
 
 <body>
     <nav class="navbar">
+        <li><img id="logo" alt='logo' src="{{ url_for('static', filename='logo.png') }}"/>
         <li><a href="/achievements">Achievements</a></li>
         <li style="float:right"><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
         {% if g.user %}

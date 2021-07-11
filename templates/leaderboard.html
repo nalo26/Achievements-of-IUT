@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Classement{% endblock %}
+{% block title %}Classement • {{ year if year else 'Général' }}{% endblock %}
 
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}">
