@@ -5,13 +5,15 @@ from datetime import datetime
 
 import db
 import auth
+import api
 
 app = Flask(__name__, instance_relative_config = True)
 app.config.from_mapping(
-    SECRET_KEY = os.urandom(16),
+    SECRET_KEY = open('key.txt').read(),
     DATABASE = os.path.join(app.instance_path, 'database.sqlite'),
 )
 app.register_blueprint(auth.bp)
+app.register_blueprint(api.bp)
 db.init_app(app)
 
 @app.route('/')
@@ -35,7 +37,7 @@ def achievements(cat_id):
     return render_template('achievements.html', achievements=achievements_data, category=cat_id)
 # ---------------------------------------------------------------------------------------
 
-
+# TODO : set to done if complete an auto compelete one
 @app.route('/save', methods=['POST'])
 def save_score():
     if not g.user: return {'success': False}, 409, {'ContentType':'application/json'}
