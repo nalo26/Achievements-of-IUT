@@ -76,7 +76,32 @@ def achievement():
 
 @bp.route('/get_leaderboard')
 def leaderboard():
-    return {}, 200, {'ContentType':'application/json'}
+    try:
+        year = request.args.get('year')
+        
+        base = get_db()
+        
+        leaderboard = None
+        if year is None:
+            leaderboard = base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()
+        else:
+            leaderboard = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
+        if leaderboard is None: return response()
+        
+        ret = {
+            "year"  : 0 if year is None else year,
+            "users" : [
+                {
+                    "id_user"        : u['id_user'],
+                    "name"           : f"{u['firstname']} {u['lastname']}",
+                    "promotion_year" : u['year'],
+                    "score"          : u['score'],
+                }
+                for u in leaderboard
+            ]
+        }
+        return response(ret)
+    except Exception: return response()
 
 def response(data=None, code=200):
     if data is None: data = {}

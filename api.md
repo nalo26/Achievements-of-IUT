@@ -78,8 +78,8 @@ A JSON dict containing leaderboard information, and the users on the leaderboard
 
 ```javascript
 {
-    "year": 0,  // Year of the leadboard. 0 if global leaderboard
-    "users": [{ // Users in the leaderboard, order by their score
+    "year"  : 0, // Year of the leadboard. 0 if global leaderboard
+    "users" : [{ // Users in the leaderboard, order by their score
         "id_user"        : 1, // ID of the user
         "name"           : "Rick Astley", // Name of the user (firstname + lastname)
         "promotion_year" : "2017", // Year of first year at the IUT
