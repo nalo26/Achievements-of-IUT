@@ -38,6 +38,11 @@ body {
     margin-right: 10px;
 }
 
+#discord {
+    width: 20px;
+    margin-right: 7px;
+}
+
 .flash {
     margin-bottom: 10px;
     height: fit-content;

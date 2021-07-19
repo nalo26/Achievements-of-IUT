@@ -1,19 +1,25 @@
 from sqlite3.dbapi2 import OperationalError
 from flask import Flask, redirect, render_template, session, g, request, abort
 import os
+import configparser
 from datetime import datetime
 
 import db
 import auth
 import api
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 app = Flask(__name__, instance_relative_config = True)
 app.config.from_mapping(
-    SECRET_KEY = open('key.txt').read(),
+    SECRET_KEY = config['Flask']['secret'],
     DATABASE = os.path.join(app.instance_path, 'database.sqlite'),
 )
+
 app.register_blueprint(auth.bp)
 app.register_blueprint(api.bp)
+auth.init_config(config)
 db.init_app(app)
 
 @app.route('/')
@@ -32,9 +38,9 @@ def achievement(cat_id):
 def achievements(cat_id):
     achievements_data, _ = read_achievements()
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
-    session['page'] = cat_id
+    session['page'] = f"/achievement/{cat_id}"
     
-    return render_template('achievements.html', achievements=achievements_data, category=cat_id)
+    return render_template('achievements.html', achievements=achievements_data, category=cat_id, login_url=auth.get_login_url())
 # ---------------------------------------------------------------------------------------
 
 # TODO : set to done if complete an auto compelete one
@@ -85,7 +91,7 @@ def leaderboard(year):
         session['page'] = f"/leaderboard/{year}"
         users = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
         
-    return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear)
+    return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear, login_url=auth.get_login_url())
 
 
 @app.route('/profile/<int:user_id>')
@@ -113,8 +119,9 @@ def profile(user_id):
     for r in req.fetchall():
         difficulties[r['difficulty']-1] = r['amount']
     
-    return render_template('auth/profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
-                           ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users))
+    return render_template('profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
+                           ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users),
+                           login_url=auth.get_login_url())
 
 
 @app.errorhandler(401)
@@ -157,4 +164,4 @@ def read_achievements(parent_id=None):
     
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True, host=config['Flask']['host'], port=config['Flask']['port'])

@@ -19,8 +19,9 @@
                 </ul>
             </li>
         {% else %}
-            <li style="float:right"><a href="{{ url_for('auth.register') }}">Inscription</a></li>
-            <li style="float:right"><a href="{{ url_for('auth.login') }}">Connexion</a></li>
+            <li style="float:right"><a href="{{ login_url }}">
+                <img id="discord" src="{{ url_for('static', filename='discord.png') }}"/>Connexion</a>
+            </li>
         {% endif %}
     </nav>
 

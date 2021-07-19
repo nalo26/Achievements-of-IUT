@@ -2,4 +2,4 @@
 __pycache__/
 
 instance/
-key.txt
+config.ini

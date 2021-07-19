@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
-    id_user INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_user INTEGER PRIMARY KEY,
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
     password TEXT NOT NULL,
