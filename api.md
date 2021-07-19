@@ -14,7 +14,7 @@ Retrieve general user information.
 
 A JSON dict containing user information, if such user is found.
 
-```json
+```javascript
 {
     "id_user"                : 1,        // ID of the user
     "firstname"              : "Rick",   // Firstname of the user
@@ -49,7 +49,7 @@ Retrieve general achievement information.
 
 A JSON dict containing achievement information, if such achievement is found.
 
-```json
+```javascript
 {
     "id_achievement" : 1, // ID of the achievement
     "name"           : "Never Gonna Give You Up",        // Name of the achievement (short)
@@ -76,7 +76,7 @@ Retrieve information about leaderboard.
 
 A JSON dict containing leaderboard information, and the users on the leaderboard.
 
-```json
+```javascript
 {
     "year": 0,  // Year of the leadboard. 0 if global leaderboard
     "users": [{ // Users in the leaderboard, order by their score

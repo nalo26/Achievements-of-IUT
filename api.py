@@ -44,15 +44,35 @@ def user():
             "global_rank"            : rank,
             "year_rank"              : year_rank,
             "completed_achievements" : [
-                int(r['id_achievement']) for r in base.execute("SELECT id_achievement FROM done WHERE id_user = ?", (user_id,)).fetchall()
+                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM done WHERE id_user = ?", (user_id,)).fetchall()
             ]
         }
         return response(ret)
-    except Exception as e: return response()
+    except Exception: return response()
 
 @bp.route('/get_achievement')
 def achievement():
-    return {}, 200, {'ContentType':'application/json'}
+    try:
+        ach_id = request.args.get('id')
+        if ach_id is None: return response()
+            
+        base = get_db()
+        
+        a = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach_id,)).fetchone()
+        if a is None: return response()
+        
+        ret = {
+            "id_achievement" : a['id_achievement'],
+            "name"           : a['name'],
+            "lore"           : a['lore'],
+            "difficulty"     : a['difficulty'],
+            "auto_complete"  : a['auto_complete'],
+            "childs"         : [
+                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM achievement WHERE parent_id = ?", (a['id_achievement'],)).fetchall()
+            ]
+        }
+        return response(ret)
+    except Exception: return response()
 
 @bp.route('/get_leaderboard')
 def leaderboard():
