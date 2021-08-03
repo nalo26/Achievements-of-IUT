@@ -63,7 +63,7 @@
                             label.style.backgroundColor = compute_color(color);
                             var data = JSON.stringify({
                                 "type": "add",
-                                "user": parseInt("{{ g.user['id_user'] }}"),
+                                "user": "{{ g.user['id_user'] }}",
                                 "achievement": a.id
                             });
                             xhr.send(data);

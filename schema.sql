@@ -1,15 +1,21 @@
 DROP TABLE IF EXISTS done;
 DROP TABLE IF EXISTS achievement;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS discord_user;
+
+CREATE TABLE discord_user (
+   id_user INTEGER PRIMARY KEY,
+   firstname TEXT NOT NULL,
+   lastname TEXT NOT NULL,
+   year INTEGER NOT NULL,
+   avatar TEXT NOT NULL
+);
 
 CREATE TABLE user (
-    id_user INTEGER PRIMARY KEY,
-    firstname TEXT NOT NULL,
-    lastname TEXT NOT NULL,
-    password TEXT NOT NULL,
-    year INTEGER NOT NULL,
-    joindate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    score INTEGER DEFAULT 0
+   id_user INTEGER PRIMARY KEY,
+   joindate DATETIME DEFAULT CURRENT_TIMESTAMP,
+   score INTEGER DEFAULT 0,
+   FOREIGN KEY(id_user) REFERENCES discord_user(id_user)
 );
 
 CREATE TABLE achievement(
