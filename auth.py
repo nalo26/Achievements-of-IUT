@@ -39,27 +39,27 @@ def login_required(view):
 
 @bp.route('/login_success')
 def oauth_callback():
-    # try:
-    discord = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
-    token = discord.fetch_token(
-        token_url,
-        client_secret=client_secret,
-        authorization_response=request.url,
-    )
-    session['discord_token'] = token
-    discord_user = get_discord_user(token)
-    db = get_db()
-    user = db.execute("SELECT * FROM user WHERE id_user = ?", (discord_user['id'],)).fetchone()
-    if user is None: # register
-        if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (discord_user['id'],)).fetchone() is None:
-            return "Please make sure to join the discord server before registering."
-        db.execute('INSERT INTO user (id_user) VALUES (?)', (discord_user['id'],))
-        db.commit()
-    # login
-    g.user = db.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
-                        (discord_user['id'],)).fetchone()
-    return redirect(get_last_page())
-    # except Exception: return redirect(get_login_url())
+    try:
+        discord = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
+        token = discord.fetch_token(
+            token_url,
+            client_secret=client_secret,
+            authorization_response=request.url,
+        )
+        session['discord_token'] = token
+        discord_user = get_discord_user(token)
+        db = get_db()
+        user = db.execute("SELECT * FROM user WHERE id_user = ?", (discord_user['id'],)).fetchone()
+        if user is None: # register
+            if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (discord_user['id'],)).fetchone() is None:
+                return "Please make sure to join the discord server before registering."
+            db.execute('INSERT INTO user (id_user) VALUES (?)', (discord_user['id'],))
+            db.commit()
+        # login
+        g.user = db.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
+                            (discord_user['id'],)).fetchone()
+        return redirect(get_last_page())
+    except Exception: return redirect(get_login_url())
 
 
 @bp.route('/logout')
@@ -100,6 +100,6 @@ def get_login_url():
 
 
 def get_last_page():
-    page = session['page']
+    page = session.get('page')
     if page is None: page = url_for("/achievements", cat_id=0)
     return page

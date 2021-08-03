@@ -9,12 +9,19 @@ body {
     padding: 20px;
     border-radius: 20px;
     margin: 20px;
-    width: 400px;
+    width: auto;
+}
+
+#pp {
+    width: 140px;
+    border-radius: 20px;
+    vertical-align: middle;
 }
 
 h1 {
-    margin: 0;
-    text-align: center;
+    margin: 0 0 0 15px;
+    display: inline-block;
+    word-break: break-word;
 }
 
 h2 {

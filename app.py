@@ -46,17 +46,17 @@ def achievements(cat_id):
 # TODO : set to done if complete an auto compelete one
 @app.route('/save', methods=['POST'])
 def save_score():
-    if not g.user: return {'success': False, 'msg': 'not logged'}, 401, {'ContentType':'application/json'}
+    if not g.user: return api.response({'success': False, 'msg': 'not logged'}, 401)
     
     data = request.json
     user = int(data.get('user'))
-    if g.user['id_user'] != user: return {'success': False, 'msg': 'impersonating'}, 401, {'ContentType':'application/json'}
+    if g.user['id_user'] != user: return api.response({'success': False, 'msg': 'impersonating'}, 401)
     
-    if data.get('type') not in ('add', 'remove'): return {'success': False, 'msg': 'bad action'}, 401, {'ContentType':'application/json'}
+    if data.get('type') not in ('add', 'remove'): return api.response({'success': False, 'msg': 'bad action'}, 401)
     
     base = db.get_db()
     ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (data.get('achievement'),)).fetchone()
-    if bool(ach['auto_complete']): return {'success': False, 'msg': 'autocomplete'}, 401, {'ContentType':'application/json'}
+    if bool(ach['auto_complete']): return api.response({'success': False, 'msg': 'autocomplete'}, 401)
     
     try:
         if data.get('type') == "add":
@@ -68,9 +68,9 @@ def save_score():
             base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user,))
             base.commit()
     except OperationalError:
-        return {'success': False}, 500, {'ContentType':'application/json'}
+        return api.response({'success': False}, 500)
     
-    return {'success': True}, 200, {'ContentType':'application/json'}
+    return api.response({'success': True})
 
 
 @app.route('/leaderboard', defaults={'year': None})
