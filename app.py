@@ -1,4 +1,4 @@
-from sqlite3.dbapi2 import OperationalError
+from sqlite3.dbapi2 import OperationalError, IntegrityError
 from flask import Flask, redirect, render_template, session, g, request, abort
 import os
 import configparser
@@ -43,7 +43,6 @@ def achievements(cat_id):
     return render_template('achievements.html', achievements=achievements_data, category=cat_id, login_url=auth.get_login_url())
 # ---------------------------------------------------------------------------------------
 
-# TODO : set to done if complete an auto compelete one
 @app.route('/save', methods=['POST'])
 def save_score():
     if not g.user: return api.response({'success': False, 'msg': 'not logged'}, 401)
@@ -67,7 +66,19 @@ def save_score():
             base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (user, data.get('achievement'),))
             base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user,))
             base.commit()
-    except OperationalError:
+            
+        parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
+        if parent is not None and bool(parent['auto_complete']):
+            _, all_childs_completed = read_achievements(parent['id_achievement'])
+            print(all_childs_completed)
+            
+            if all_childs_completed:
+                base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (user, parent['id_achievement'],))
+            else:
+                base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (user, parent['id_achievement'],))
+            base.commit()
+            
+    except (OperationalError, IntegrityError):
         return api.response({'success': False}, 500)
     
     return api.response({'success': True})
@@ -101,7 +112,7 @@ def profile(user_id):
     session['page'] = f"/profile/{user_id}"
     base = db.get_db()
     user = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)).fetchone()
-    if user is None: abort(404, f"Aucun utilisateur avec l'ID {user_id} n'a été trouvé !")
+    if user is None: abort(404, f"No user with ID {user_id} was found.")
 
     datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
     ach_complete = len(base.execute("SELECT * FROM done WHERE id_user = ?", (user_id,)).fetchall())
@@ -127,13 +138,6 @@ def profile(user_id):
     return render_template('profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
                            ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users),
                            login_url=auth.get_login_url())
-
-
-@app.errorhandler(401)
-@app.errorhandler(404)
-@app.errorhandler(500)
-def error_page(error):
-    return f"Error {error.code}", error.code
 
 
 def read_achievements(parent_id=None):

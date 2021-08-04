@@ -71,7 +71,7 @@
                             label.style.backgroundColor = "";
                             var data = JSON.stringify({
                                 "type": "remove",
-                                "user": parseInt("{{ g.user['id_user'] }}"),
+                                "user": "{{ g.user['id_user'] }}",
                                 "achievement": a.id
                             });
                             xhr.send(data);
