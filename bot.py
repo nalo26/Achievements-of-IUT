@@ -3,6 +3,7 @@ from discord.ext import commands
 import configparser
 import sqlite3
 import requests as rq
+from datetime import datetime
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -71,7 +72,35 @@ async def sync(ctx, member:discord.Member = None):
     
     if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
     else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
-       
+    
+@client.command(aliases=['profil', 'me'])
+async def profile(ctx, member:discord.Member = None):
+    if member is None: member = ctx.message.author
+    user = rq.get(f"{api_uri}/get_user?id={member.id}").json()
+    if len(user) == 0:
+        await ctx.send(f":x: `{member.display_name}` is not registered.")
+        return
+    
+    embed = discord.Embed(title=f"Profil de {user.get('firstname')} {user.get('lastname')} [{user.get('promotion_year')}]",
+                          url=f"{base_uri}/profile/{user.get('id_user')}")
+    embed.set_thumbnail(url=str(member.avatar_url))
+    content  = f":bar_chart: __Score total : **{user.get('score')}pts**__\n"
+    content += f":medal: Classement général : **#{user.get('global_rank')}**\n"
+    content += f":military_medal: Classement [{user.get('promotion_year')}] : **#{user.get('year_rank')}**"
+    embed.description = content
+    
+    ach  = f":green_circle: {user.get('count_easy')} / "
+    ach += f":blue_circle: {user.get('count_normal')} / "
+    ach += f":orange_circle: {user.get('count_hard')} / "
+    ach += f":red_circle: {user.get('count_hardcore')} / "
+    ach += f":purple_circle: {user.get('count_impossible')}"
+    embed.add_field(name=f"Achievements complétés : {len(user.get('completed_achievements'))}", value=ach)
+    
+    embed.set_footer(text = "A rejoint le")
+    embed.timestamp = datetime.strptime(user.get('join_date'), "%Y-%m-%d %H:%M:%S")
+    
+    await ctx.send(embed=embed)
+
 @client.command(aliases=['classement', 'top', 'lead'])
 async def leaderboard(ctx, year=None):
     leaderboard = rq.get(f"{api_uri}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
@@ -91,7 +120,7 @@ async def leaderboard(ctx, year=None):
         score = user.get('score')
         if score != last:
             ind = emoji[i] if i < len(emoji) else f"{i+1} "
-        content += f"{ind}: **{user.get('name')}** ({score}pts)"
+        content += f"{ind}: **{user.get('name')}** ({score}pts)\n"
         last = score
     if content == "": content = "*Aucun participant n'a été trouvé !*"
     embed.description = content

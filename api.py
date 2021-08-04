@@ -16,7 +16,7 @@ def user():
             
         base = get_db()
         
-        u = base.execute("SELECT * FROM user WHERE id_user = ?", (user_id,)).fetchone()
+        u = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE id_user = ?", (user_id,)).fetchone()
         if u is None: return response()
         
         req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
@@ -30,7 +30,9 @@ def user():
         users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()]
         rank = users.index(int(user_id)) + 1
         
-        year_users = [r['id_user'] for r in base.execute("SELECT id_user FROM user WHERE year = ? ORDER BY score DESC", (u['year'],)).fetchall()]
+        year_users = [r['id_user'] for r in base.execute(
+            "SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
+            (u['year'],)).fetchall()]
         year_rank = year_users.index(int(user_id)) + 1
         
         ret = {
