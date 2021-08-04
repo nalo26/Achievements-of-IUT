@@ -19,6 +19,7 @@
     display: block;
     color: var(--text);
     padding: 20px;
+    transition-property: background-color;
 }
 
 .navbar a:hover {

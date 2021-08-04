@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import configparser
 import sqlite3
+import requests as rq
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -15,6 +16,8 @@ guild_ids = [int(config['DiscordBot']['guild_id'])]
 channel_id = int(config['DiscordBot']['channel_id'])
 admin_role_id = int(config['DiscordBot']['admin_role_id'])
 guild = None
+
+api_base_uri = config['DiscordApp']['base_uri'] + config['DiscordApp']['api_uri']
 
 @client.event
 async def on_ready():
@@ -67,8 +70,34 @@ async def sync(ctx, member:discord.Member = None):
     
     if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
     else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
-            
+       
+@client.command(aliases=['classement', 'top', 'lead'])
+async def leaderboard(ctx, year=None):
+    leaderboard = rq.get(f"{api_base_uri}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
+    if len(leaderboard) == 0:
+        await ctx.send(f":x: `{year}` is not a valid year.")
+        return
     
+    emoji = [':first_place:', ':second_place:', ':third_place:']
+    last = -1
+    
+    if leaderboard.get('year') == 0:
+        embed = discord.Embed(title=":trophy: Classement général", url=f"")
+    else:
+        embed = discord.Embed(title=f":trophy: Classement promo {leaderboard.get('year')}", url=f"")
+    content = ""
+    for i, user in enumerate(leaderboard.get('users')[:20]):
+        score = user.get('score')
+        if score != last:
+            ind = emoji[i] if i < len(emoji) else f"{i+1} "
+        content += f"{ind}: **{user.get('name')}** ({score})"
+        last = score
+    if content == "": content = "*Aucun participant n'a été trouvé !*"
+    embed.description = content
+    
+    await ctx.send(embed=embed)
+
+
 def get_user_info(member):
     nick = member.nick
     if nick is None: raise ValueError("Bad User") # not renamed

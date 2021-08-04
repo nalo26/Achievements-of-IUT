@@ -23,7 +23,7 @@ def init_config(config):
     global client_id, client_secret, redirect_uri, guild_id
     client_id = config['DiscordApp']['client_id']
     client_secret = config['DiscordApp']['client_secret']
-    redirect_uri = config['DiscordApp']['redirect_uri']
+    redirect_uri = config['DiscordApp']['base_uri'] + config['DiscordApp']['redirect_uri']
     guild_id = config['DiscordBot']['guild_id']
 
 def login_required(view):

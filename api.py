@@ -1,8 +1,12 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 
 from db import get_db
 
 bp = Blueprint('api', __name__, url_prefix='/api')
+
+@bp.route('/')
+def default():
+    return redirect("https://github.com/nalo26/Achievements-of-IUT/blob/main/api.md")
 
 @bp.route('/get_user')
 def user():
@@ -83,13 +87,13 @@ def leaderboard():
         
         leaderboard = None
         if year is None:
-            leaderboard = base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()
+            leaderboard = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) ORDER BY score DESC").fetchall()
         else:
-            leaderboard = base.execute("SELECT * FROM user WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
+            leaderboard = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
         if leaderboard is None: return response()
         
         ret = {
-            "year"  : 0 if year is None else year,
+            "year"  : 0 if year is None else int(year),
             "users" : [
                 {
                     "id_user"        : u['id_user'],
