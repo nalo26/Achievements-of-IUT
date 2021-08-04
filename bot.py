@@ -17,7 +17,8 @@ channel_id = int(config['DiscordBot']['channel_id'])
 admin_role_id = int(config['DiscordBot']['admin_role_id'])
 guild = None
 
-api_base_uri = config['DiscordApp']['base_uri'] + config['DiscordApp']['api_uri']
+base_uri = config['DiscordApp']['base_uri']
+api_uri = base_uri + config['DiscordApp']['api_uri']
 
 @client.event
 async def on_ready():
@@ -73,7 +74,7 @@ async def sync(ctx, member:discord.Member = None):
        
 @client.command(aliases=['classement', 'top', 'lead'])
 async def leaderboard(ctx, year=None):
-    leaderboard = rq.get(f"{api_base_uri}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
+    leaderboard = rq.get(f"{api_uri}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
     if len(leaderboard) == 0:
         await ctx.send(f":x: `{year}` is not a valid year.")
         return
@@ -82,15 +83,15 @@ async def leaderboard(ctx, year=None):
     last = -1
     
     if leaderboard.get('year') == 0:
-        embed = discord.Embed(title=":trophy: Classement général", url=f"")
+        embed = discord.Embed(title=":trophy: Classement général", url=f"{base_uri}/leaderboard")
     else:
-        embed = discord.Embed(title=f":trophy: Classement promo {leaderboard.get('year')}", url=f"")
+        embed = discord.Embed(title=f":trophy: Classement promo {leaderboard.get('year')}", url=f"{base_uri}/leaderboard/{year}")
     content = ""
     for i, user in enumerate(leaderboard.get('users')[:20]):
         score = user.get('score')
         if score != last:
             ind = emoji[i] if i < len(emoji) else f"{i+1} "
-        content += f"{ind}: **{user.get('name')}** ({score})"
+        content += f"{ind}: **{user.get('name')}** ({score}pts)"
         last = score
     if content == "": content = "*Aucun participant n'a été trouvé !*"
     embed.description = content
