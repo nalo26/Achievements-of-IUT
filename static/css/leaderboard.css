@@ -1,6 +1,5 @@
 .leaderboard {
     margin: 0;
-    padding: 20px;
     grid-area: main;
     overflow: auto;
 }
@@ -8,7 +7,7 @@
 .table {
     position: relative;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 70px;
     width: 50%;
     border-collapse: collapse;
 }

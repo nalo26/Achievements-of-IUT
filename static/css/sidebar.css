@@ -13,6 +13,9 @@
 .sidebar li {
     display: block;
     width: 100%;
+    position: relative;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
 
 .sidebar a {
@@ -22,13 +25,15 @@
     padding: 30px 16px;
 }
 
-.sidebar a:hover {
+.sidebar li:hover {
     background-color: var(--light-link);
     transition-duration: 0.4s;
+    transition-property: background-color;
 }
 
-.sidebar a:not(hover) {
+.sidebar li:not(hover) {
     transition-duration: 0.4s;
+    transition-property: background-color;
 }
 
 .sidebar li:hover ul {
@@ -40,6 +45,38 @@
 	background-color: var(--main-color);
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
+}
+
+.active::before, .active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    z-index: 1;
+}
+.active::before {
+    top: -30px;
+    box-shadow: 15px 15px 0 var(--main-color);
+}
+.active::after {
+    bottom: -30px;
+    box-shadow: 15px -15px 0 var(--main-color);
+}
+.active:hover::before {
+    box-shadow: 15px 15px 0 var(--light-link);
+    transition-duration: 0.4s;
+}
+.active:hover::after {
+    box-shadow: 15px -15px 0 var(--light-link);
+    transition-duration: 0.4s;
+}
+.active:not(hover)::before {
+    transition-duration: 0.4s;
+}
+.active:not(hover)::after {
+    transition-duration: 0.4s;
 }
 
 .difficulties {

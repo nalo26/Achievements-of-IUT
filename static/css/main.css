@@ -31,6 +31,16 @@ body {
                     / fit-content(100%) auto;
 }
 
+.tree-div::before, .leaderboard::before {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: -15px -15px 0 var(--secondary-color);
+}
+
 #logo {
     height: 46px;
     margin-top: 5px;

@@ -1,6 +1,5 @@
 .tree-div {
     margin: 0;
-    padding: 20px;
     grid-area: main;
     overflow: auto;
 }
@@ -9,8 +8,8 @@
     box-sizing: border-box;
 }
 
-#tree {
-    position: relative;
+.tree {
+    margin: 20px;
 }
 
 .branch {
