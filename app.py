@@ -44,40 +44,22 @@ def achievements(cat_id):
 # ---------------------------------------------------------------------------------------
 
 @app.route('/save', methods=['POST'])
-def save_score():
+def save():
     if not g.user: return api.response({'success': False, 'msg': 'not logged'}, 401)
     
     data = request.json
-    user = int(data.get('user'))
-    if g.user['id_user'] != user: return api.response({'success': False, 'msg': 'impersonating'}, 401)
+    user_id = int(data.get('user'))
+    ach_id = int(data.get('achievement'))
+    if g.user['id_user'] != user_id: return api.response({'success': False, 'msg': 'impersonating'}, 401)
     
     if data.get('type') not in ('add', 'remove'): return api.response({'success': False, 'msg': 'bad action'}, 401)
     
     base = db.get_db()
-    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (data.get('achievement'),)).fetchone()
+    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach_id,)).fetchone()
     if bool(ach['auto_complete']): return api.response({'success': False, 'msg': 'autocomplete'}, 401)
     
     try:
-        if data.get('type') == "add":
-            base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (user, data.get('achievement'),))
-            base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user,))
-            base.commit()
-        if data.get('type') == "remove":
-            base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (user, data.get('achievement'),))
-            base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user,))
-            base.commit()
-            
-        parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
-        if parent is not None and bool(parent['auto_complete']):
-            _, all_childs_completed = read_achievements(parent['id_achievement'])
-            print(all_childs_completed)
-            
-            if all_childs_completed:
-                base.execute("INSERT INTO done (id_user, id_achievement) VALUES (?, ?)", (user, parent['id_achievement'],))
-            else:
-                base.execute("DELETE FROM done WHERE id_user = ? AND id_achievement = ?", (user, parent['id_achievement'],))
-            base.commit()
-            
+        save_score(data.get('type'), user_id, ach)  
     except (OperationalError, IntegrityError):
         return api.response({'success': False}, 500)
     
@@ -140,6 +122,31 @@ def profile(user_id):
                            login_url=auth.get_login_url())
 
 
+def save_score(action, user_id, ach, allowed=True):
+    ach_id = ach['id_achievement']
+    base = db.get_db()
+    
+    if action == "add" and allowed:
+        done = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", (user_id, ach_id)).fetchone()
+        if done is None:
+            base.execute("INSERT INTO done  (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
+            base.execute("INSERT INTO event (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
+        else:
+            base.execute("UPDATE done SET complete = 1 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
+        base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user_id,))
+        base.commit()
+    if action == "remove" and allowed:
+        base.execute("UPDATE done SET complete = 0 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
+        base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
+        base.commit()
+        
+    parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
+    if parent is not None:
+        _, all_childs_completed = read_achievements(parent['id_achievement'])
+        print(all_childs_completed)
+        if all_childs_completed: save_score("add", user_id, parent, bool(parent['auto_complete']))
+        else: save_score("remove", user_id, parent, bool(parent['auto_complete']))
+
 def read_achievements(parent_id=None):
     data = []
     base = db.get_db()
@@ -149,11 +156,12 @@ def read_achievements(parent_id=None):
     for elem in base.execute(query).fetchall():
         
         childs, all_childs_complete = read_achievements(elem['id_achievement'])
+        all_complete = all_complete and all_childs_complete
         
         auto_complete = bool(elem['auto_complete'])
         complete = False
         if g.user: 
-            user_complete = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", 
+            user_complete = base.execute("SELECT * FROM done WHERE complete = 1 AND id_user = ? AND id_achievement = ?", 
                                         (g.user['id_user'], elem['id_achievement'],)).fetchone() is not None
             if not user_complete: all_complete = False
             complete = all_childs_complete if auto_complete else user_complete

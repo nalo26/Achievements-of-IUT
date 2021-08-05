@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import configparser
 import sqlite3
+import asyncio
 import requests as rq
 from datetime import datetime
 
@@ -9,26 +10,26 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 DB = None
+DIFFICULTIES = [0x6AA84F, 0x4A86EF, 0xE69137, 0xB10000, 0x674EA7]
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = 'rpg!', intents=intents)
 
-guild_ids = [int(config['DiscordBot']['guild_id'])]
+guild_ids = int(config['DiscordBot']['guild_id'])
 channel_id = int(config['DiscordBot']['channel_id'])
 admin_role_id = int(config['DiscordBot']['admin_role_id'])
 guild = None
+channel = None
 
 base_uri = config['DiscordApp']['base_uri']
 api_uri = base_uri + config['DiscordApp']['api_uri']
 
 @client.event
 async def on_ready():
-    global guild
     print("Connected as:")
     print(f"{client.user.name}#{client.user.discriminator}")
     print(client.user.id)
     print("-----------------")
-    guild = client.get_guild(guild_ids[0])
     # await client.change_presence(activity=discord.Game(name=''))
 
 @client.event
@@ -161,7 +162,41 @@ def get_db():
             'instance/database.sqlite',
             detect_types = sqlite3.PARSE_DECLTYPES
         )
+        DB.row_factory = sqlite3.Row
     return DB
 
+def embed_event(event):
+    user = rq.get(f"{api_uri}/get_user?id={event['id_user']}").json()
+    ach  = rq.get(f"{api_uri}/get_achievement?id={event['id_achievement']}").json()
+    embed = discord.Embed(title=ach.get('name'), color=DIFFICULTIES[ach.get('difficulty')-1])
+    embed.set_author(
+        name=f"par {user.get('firstname')} {user.get('lastname')}",
+        url=f"{base_uri}/profile/{user.get('id_user')}",
+        icon_url=guild.get_member(user.get('id_user')).avatar_url
+    )
+    embed.description = ach.get('lore')
+    embed.set_footer(text = "Réalisé le")
+    embed.timestamp = datetime.strptime(event['event_time'], "%Y-%m-%d %H:%M:%S")
+    
+    return embed
 
+async def background_task():
+    global guild, channel
+    
+    await client.wait_until_ready()
+    guild = client.get_guild(guild_ids)
+    channel = guild.get_channel(channel_id)
+    db = get_db()
+    
+    while not client.is_closed():
+        events = db.execute("SELECT * FROM event ORDER BY id_event").fetchall()
+        for event in events:
+            db.execute("DELETE FROM event WHERE id_event = ?", (event['id_event'],))
+            db.commit()
+            await channel.send(embed=embed_event(event))
+            await asyncio.sleep(2)
+        await asyncio.sleep(30)
+
+
+client.loop.create_task(background_task())
 client.run(str(config['DiscordBot']['token']))

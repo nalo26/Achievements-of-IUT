@@ -57,7 +57,7 @@
                     label.addEventListener("click", function(e) {
                         label.classList.toggle("complete");
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", " {{ url_for('save_score') }}", true);
+                        xhr.open("POST", " {{ url_for('save') }}", true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         if(label.classList.contains("complete")) {
                             label.style.backgroundColor = compute_color(color);

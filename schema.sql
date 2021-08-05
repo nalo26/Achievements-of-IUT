@@ -31,8 +31,17 @@ CREATE TABLE achievement(
 CREATE TABLE done(
    id_user INTEGER,
    id_achievement INTEGER,
+   complete BOOLEAN NOT NULL CHECK (complete in (0, 1)) DEFAULT 1,
    PRIMARY KEY(id_user, id_achievement),
    FOREIGN KEY(id_user) REFERENCES user(id_user),
    FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
 );
 
+CREATE TABLE event(
+   id_event INTEGER PRIMARY KEY AUTOINCREMENT,
+   event_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+   id_user INTEGER NOT NULL,
+   id_achievement INTEGER NOT NULL,
+   FOREIGN KEY(id_user) REFERENCES user(id_user),
+   FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
+);
