@@ -24,13 +24,20 @@ api_uri = base_uri + config['DiscordApp']['api_uri']
 @client.event
 async def on_ready():
     global guild
-    print("Connected as : ")
+    print("Connected as:")
     print(f"{client.user.name}#{client.user.discriminator}")
     print(client.user.id)
     print("-----------------")
     guild = client.get_guild(guild_ids[0])
     # await client.change_presence(activity=discord.Game(name=''))
-    
+
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MemberNotFound):
+        await ctx.send(":x: Member not found.")
+    else:
+        raise error
+
 @client.event
 async def on_member_update(before, after):
     if len(before.roles) <= len(after.roles) and before.display_name == after.display_name: return
