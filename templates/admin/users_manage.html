@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin • Users{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="admin">
+        <form method="post">
+            <input class="submit" type="submit" value="Enregistrer">
+            <table class="table">
+                <thead>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Année</th>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td><input name="firstname-{{ user.id_user }}" id="firstname-{{ user.id_user }}" value="{{ user.firstname }}" /></td>
+                            <td><input name="lastname-{{ user.id_user }}" id="lastname-{{ user.id_user }}" value="{{ user.lastname }}" /></td>
+                            <td><input name="year-{{ user.id_user }}" id="year-{{ user.id_user }}" value="{{ user.year }}" /></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input class="submit" type="submit" value="Enregistrer">
+        </form>
+    </div>
+{% endblock %}

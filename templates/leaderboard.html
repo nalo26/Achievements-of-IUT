@@ -5,6 +5,7 @@
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -26,7 +27,7 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <th scope="row">#{{ loop.index }}</td>
+                        <th scope="row">#{{ loop.index }}</th>
                         <td><a href="{{ url_for('profile', user_id=user.id_user) }}">{{ user.firstname }} {{user.lastname}}</a></td>
                         <td><a href="{{ url_for('leaderboard', year=user.year) }}">{{ user.year }}</a></td>
                         <td>{{ user.score }}</td>

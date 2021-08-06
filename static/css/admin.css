@@ -1,0 +1,44 @@
+body {
+    grid-template:  [header-left] "head" fit-content(100%) [header-right]
+                    [main-left]   "main" auto              [main-right]
+                    / 100%;
+}
+
+.admin {
+    margin: 0;
+    grid-area: main;
+    overflow: auto;
+}
+
+.admin input:not([type="submit"]) {
+	font-family: "Exo 2";
+	font-size: 15px;
+    margin-top: 5px;
+    height: 30px;
+    border: 2px solid var(--light-link);
+    border-radius: 7px;
+}
+
+.submit {
+    font-family: "Exo 2";
+	font-size: 15px;
+    display: block;
+    margin: 40px auto -20px auto;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    height: inherit;
+    padding: 10px 32px;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    background-color: transparent;
+    transition-property: background-color;
+}
+
+.submit:hover {
+    background-color: #306932;
+    transition-duration: 0.4s;
+}
+.submit:not(hover) {
+    transition-duration: 0.4s;
+}
