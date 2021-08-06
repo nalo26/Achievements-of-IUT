@@ -30,9 +30,13 @@ def manage_users():
     base = get_db()
     
     if request.method == 'POST':
+        last_u_id = ""
         for key, value in request.form.items():
             k, u_id = key.split('-')
-            user = base.execute("SELECT firstname, lastname, year FROM discord_user where id_user = ?", (u_id,)).fetchone()
+            if k not in ('firstname', 'lastname', 'year'): continue
+            if u_id != last_u_id:
+                user = base.execute("SELECT firstname, lastname, year FROM discord_user where id_user = ?", (u_id,)).fetchone()
+            last_u_id = u_id
             if str(user[k]) == str(value): continue
             base.execute(f"UPDATE discord_user SET {k} = ? WHERE id_user = ?", (value, u_id,))
         base.commit()

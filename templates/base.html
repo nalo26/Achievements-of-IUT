@@ -18,6 +18,14 @@
                     <li><a href="{{ url_for('auth.logout') }}">Déconnexion</a></li>
                 </ul>
             </li>
+            {% if g.user.id_user == admin_id %}
+                <li style="float:right"><a href="">Admin ▼</a>
+                    <ul>
+                        <li><a href="{{ url_for('admin.manage_users') }}">Utilisateurs</a></li>
+                        <li><a href="{{ url_for('admin.manage_achievements') }}">Achievements</a></li>
+                    </ul>
+                </li>
+            {% endif %}
         {% else %}
             <li style="float:right"><a href="{{ login_url }}">
                 <img id="discord" src="{{ url_for('static', filename='discord.png') }}"/>Connexion</a>

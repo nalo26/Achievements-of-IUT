@@ -43,7 +43,8 @@ def achievements(cat_id):
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
     session['page'] = f"/achievement/{cat_id}"
     
-    return render_template('achievements.html', achievements=achievements_data, category=cat_id, login_url=auth.get_login_url())
+    return render_template('achievements.html', achievements=achievements_data, category=cat_id,
+                           login_url=auth.get_login_url(), admin_id=admin.admin_id)
 # ---------------------------------------------------------------------------------------
 
 @app.route('/save', methods=['POST'])
@@ -89,7 +90,8 @@ def leaderboard(year):
         users = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
                              (year,)).fetchall()
         
-    return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear, login_url=auth.get_login_url())
+    return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear,
+                           login_url=auth.get_login_url(), admin_id=admin.admin_id)
 
 
 @app.route('/profile/<int:user_id>')
@@ -122,7 +124,7 @@ def profile(user_id):
     
     return render_template('profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
                            ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users),
-                           login_url=auth.get_login_url())
+                           login_url=auth.get_login_url(), admin_id=admin.admin_id)
 
 
 def save_score(action, user_id, ach, allowed=True):
