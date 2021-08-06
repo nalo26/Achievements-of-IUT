@@ -7,6 +7,7 @@ from datetime import datetime
 import db
 import auth
 import api
+import admin
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -19,7 +20,9 @@ app.config.from_mapping(
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(api.bp)
+app.register_blueprint(admin.bp)
 auth.init_config(config)
+admin.init_config(config)
 db.init_app(app)
 
 @app.route('/')
@@ -143,7 +146,6 @@ def save_score(action, user_id, ach, allowed=True):
     parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
     if parent is not None:
         _, all_childs_completed = read_achievements(parent['id_achievement'])
-        print(all_childs_completed)
         if all_childs_completed: save_score("add", user_id, parent, bool(parent['auto_complete']))
         else: save_score("remove", user_id, parent, bool(parent['auto_complete']))
 

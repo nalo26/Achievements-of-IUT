@@ -115,10 +115,11 @@ INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALU
 INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (115, 'Forbidden phone', 'Recevoir "Les téléphones portables sont interdits en CM, TD et TP !" de sa part', 2, 112);
 INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (116, 'Stalking', 'Le voir ranger son vélo dans son bureau au moins une fois par jour de la semaine', 4, 112);
 INSERT INTO Achievement (id_achievement, name, lore, difficulty, auto_complete) VALUES (117, 'Spéciaux distanciel', 'Tous les défis à effectuer lors des cours à distance', 3, 1);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (118, 'Quizz master', 'Finir premier du classement lors d''un quizz Kahoot', 3, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (119, 'Poll intensify', 'Passer un cours avec M. Charensol durant lequel il ne fait aucun sondage', 4, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (120, 'Hello world', 'Activer sa caméra durant toute la durée d''un cours', 3, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (121, 'Wrong place', 'Se tromper de lien de cours (de manière non intentionnelle)', 2, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (122, 'Quiet place', 'Passer un cours avec Mme Constant sans entendre ses enfants', 4, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (123, 'Ghost roleplaying', 'Ne sécher aucun cours dans lequel le professeur ne fait pas l''appel', 3, 117);
-INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (124, 'Above us', 'Suivre tous les cours en distanciel sans aucune distraction (jeux, vocaux, messages, internet...)', 5, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (118, 'Quizz master', 'Finir sur le podium lors d''un quizz Kahoot', 2, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (119, 'Quizz god', 'Finir premier du classement lors d''un quizz Kahoot', 3, 118);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (120, 'Poll intensify', 'Passer un cours avec M. Charensol durant lequel il ne fait aucun sondage', 4, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (121, 'Hello world', 'Activer sa caméra durant toute la durée d''un cours', 3, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (122, 'Wrong place', 'Se tromper de lien de cours (de manière non intentionnelle)', 2, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (123, 'Quiet place', 'Passer un cours avec Mme Constant sans entendre ses enfants', 4, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (124, 'Ghost roleplaying', 'Ne sécher aucun cours dans lequel le professeur ne fait pas l''appel', 3, 117);
+INSERT INTO Achievement (id_achievement, name, lore, difficulty, parent_id) VALUES (125, 'Above us', 'Suivre tous les cours en distanciel sans aucune distraction (jeux, vocaux, messages, internet...)', 5, 117);

@@ -17,7 +17,7 @@
 }
 
 body {
-	font-family: "Exo 2";
+	font-family: "Exo 2", "Verdana", sans-serif;
 	font-size: 15px;
 	background: var(--main-color);
 	color: var(--text);

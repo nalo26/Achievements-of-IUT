@@ -1,4 +1,3 @@
-import functools
 import os
 from requests_oauthlib import OAuth2Session
 from flask import Blueprint, g, redirect, request, session, url_for
@@ -25,16 +24,6 @@ def init_config(config):
     client_secret = config['DiscordApp']['client_secret']
     redirect_uri = config['DiscordApp']['base_uri'] + config['DiscordApp']['redirect_uri']
     guild_id = config['DiscordBot']['guild_id']
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(get_login_url())
-
-        return view(**kwargs)
-
-    return wrapped_view
 
 
 @bp.route('/login_success')
