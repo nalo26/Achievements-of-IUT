@@ -59,10 +59,10 @@ def manage_achievements():
             last_a_id = a_id
             if str(ach[k]) == str(value): continue
             base.execute(f"UPDATE achievement SET {k} = ? WHERE id_achievement = ?", (value, a_id,))
-            if k != 'difficulty':
+            if k == 'difficulty':
                 base.execute(
                     f"UPDATE user SET score = score-{ach['difficulty']}+{value} WHERE id_user in (" + \
-                    "SELECT id_user FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 AND id_achievement = ?" + \
+                    "SELECT id_user FROM done WHERE complete = 1 AND id_achievement = ?" + \
                     ")", (a_id,)
                 )
         base.commit()

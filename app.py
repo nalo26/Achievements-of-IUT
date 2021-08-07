@@ -139,12 +139,10 @@ def save_score(action, user_id, ach, allowed=True):
         else:
             base.execute("UPDATE done SET complete = 1 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
         base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user_id,))
-        print(f"+{ach['difficulty']}", ach['name'])
         base.commit()
     if action == "remove" and allowed:
         base.execute("UPDATE done SET complete = 0 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
         base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
-        print(f"-{ach['difficulty']}", ach['name'])
         base.commit()
         
     parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
