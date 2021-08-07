@@ -34,11 +34,11 @@ input[type="button"] {
     background-color: transparent;
     transition: background-color;
 }
-#delete {
+.delete {
     color: var(--difficulty-4);
     border-color: var(--difficulty-4);
 }
-#create {
+.create {
     color: var(--difficulty-1);
     border-color: var(--difficulty-1);
 }
@@ -59,11 +59,11 @@ input[type="button"] {
     transition-property: background-color;
 }
 
-.submit:hover, #create:hover {
+.submit:hover, .create:hover {
     background-color: #306932;
     transition-duration: 0.4s;
 }
-#delete:hover {
+.delete:hover {
     background-color: #6e1c1c;
     transition-duration: 0.4s;
 }

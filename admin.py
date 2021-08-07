@@ -1,10 +1,12 @@
 from flask import Blueprint, redirect, request, g
+from sqlite3 import OperationalError, IntegrityError
 import functools
 
 from flask.templating import render_template
 
 from auth import get_last_page
 from db import get_db
+from api import response
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -69,3 +71,44 @@ def manage_achievements():
         
     achievements = base.execute("SELECT * FROM achievement").fetchall()
     return render_template("admin/achievements_manage.html", achievements=achievements, admin_id=admin_id)
+
+@bp.route('/create', methods=['GET', 'POST'])
+@admin_required
+def create_achievement():
+    return ""
+
+
+@bp.route('/delete', methods=['POST'])
+@admin_required
+def delete():
+    if not g.user: return response({'success': False, 'msg': 'not logged'}, 401)
+    
+    data = request.json
+    ach_id = int(data.get('id'))
+    
+    base = get_db()
+    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach_id,)).fetchone()
+        
+    try:
+        delete_achievement(ach['id_achievement'], ach['difficulty'])  
+    except (OperationalError, IntegrityError):
+        return response({'success': False}, 500)
+    
+    return redirect("/achievements")
+
+
+def delete_achievement(ach_id, dif):
+    base = get_db()
+    childs = base.execute("SELECT id_achievement, difficulty FROM achievement WHERE parent_id = ?", (ach_id,)).fetchall()
+    for child in childs:
+        delete_achievement(child['id_achievement'], child['difficulty'])
+    
+    base.execute(
+        f"UPDATE user SET score = score-{dif} WHERE id_user in (" + \
+        "SELECT id_user FROM done WHERE complete = 1 AND id_achievement = ?" + \
+        ")", (ach_id,)
+    )
+    base.execute("DELETE FROM done WHERE id_achievement = ?", (ach_id,))
+    base.execute("DELETE FROM event WHERE id_achievement = ?", (ach_id,))
+    base.execute("DELETE FROM achievement WHERE id_achievement = ?", (ach_id,))
+    base.commit()
