@@ -102,7 +102,7 @@ def profile(user_id):
     if user is None: abort(404, f"No user with ID {user_id} was found.")
 
     datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
-    ach_complete = len(base.execute("SELECT * FROM done WHERE id_user = ?", (user_id,)).fetchall())
+    ach_complete = len(base.execute("SELECT * FROM done WHERE complete = 1 AND id_user = ?", (user_id,)).fetchall())
     ach_amount = len(base.execute("SELECT * FROM achievement").fetchall())
     
     users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()]
@@ -116,7 +116,7 @@ def profile(user_id):
     
     req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
                        "FROM done JOIN achievement USING(id_achievement) " + \
-                       "WHERE id_user = ? GROUP BY difficulty " + \
+                       "WHERE complete = 1 AND id_user = ? GROUP BY difficulty " + \
                        "ORDER BY difficulty", (user_id,))
     difficulties = [0]*5
     for r in req.fetchall():
@@ -139,17 +139,23 @@ def save_score(action, user_id, ach, allowed=True):
         else:
             base.execute("UPDATE done SET complete = 1 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
         base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user_id,))
+        print(f"+{ach['difficulty']}", ach['name'])
         base.commit()
     if action == "remove" and allowed:
         base.execute("UPDATE done SET complete = 0 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
         base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
+        print(f"-{ach['difficulty']}", ach['name'])
         base.commit()
         
     parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
     if parent is not None:
         _, all_childs_completed = read_achievements(parent['id_achievement'])
-        if all_childs_completed: save_score("add", user_id, parent, bool(parent['auto_complete']))
-        else: save_score("remove", user_id, parent, bool(parent['auto_complete']))
+        done = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", (user_id, parent['id_achievement'])).fetchone()
+        if all_childs_completed: # add
+            allowed = done is None or done is not None and int(done['complete']) == 0
+        else: # remove
+            allowed = done is not None and int(done['complete']) == 1
+        save_score(action, user_id, parent, bool(parent['auto_complete']) and allowed)
 
 def read_achievements(parent_id=None):
     data = []
