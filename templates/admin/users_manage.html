@@ -20,9 +20,9 @@
                 <tbody>
                     {% for user in users %}
                         <tr>
-                            <td><input name="firstname-{{ user.id_user }}" id="firstname-{{ user.id_user }}" value="{{ user.firstname }}" /></td>
-                            <td><input name="lastname-{{ user.id_user }}" id="lastname-{{ user.id_user }}" value="{{ user.lastname }}" /></td>
-                            <td><input name="year-{{ user.id_user }}" id="year-{{ user.id_user }}" value="{{ user.year }}" /></td>
+                            <td><input type="text" name="firstname-{{ user.id_user }}" id="firstname-{{ user.id_user }}" value="{{ user.firstname }}" /></td>
+                            <td><input type="text" name="lastname-{{ user.id_user }}" id="lastname-{{ user.id_user }}" value="{{ user.lastname }}" /></td>
+                            <td><input type="number" name="year-{{ user.id_user }}" id="year-{{ user.id_user }}" value="{{ user.year }}" /></td>
                         </tr>
                     {% endfor %}
                 </tbody>

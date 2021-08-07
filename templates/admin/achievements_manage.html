@@ -50,7 +50,8 @@
         var creates = document.querySelectorAll('.create');
         for (let i = 0; i < creates.length; i++) {
             creates[i].addEventListener('click', (event) => {
-                window.location.href = "{{ url_for('admin.create_achievement') }}";
+                let id = event.target.id.split("-")[1]
+                window.location.href = "{{ url_for('admin.create_achievement', parent_id='-1') }}".replace("-1", id);
             });
         }
         var deletes = document.querySelectorAll('.delete');

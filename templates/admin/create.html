@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin • Nouveau{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div style="margin: auto;">
+        <div class="createAch">
+            <form method="post">
+                <h1>Nouvel achievement</h1>
+                <p>← {{ parent }}</p>
+                <div class="field">
+                    <label for="name">Titre</label><br/>
+                    <input type="text" name="name" id="name" value="{{ data.name[0] if data.name is defined else '' }}" required>
+                </div>
+                <div class="field">
+                    <label for="lore">Description</label><br/>
+                    <textarea name="lore" id="lore" rows="5" cols="23" required>{{ data.lore[0] if data.lore is defined else '' }}</textarea>
+                </div>
+                <div class="field" id="dif">
+                    <label for="difficulty">Difficulté</label><br/>
+                    <div class="dot" style="background-color: var(--difficulty-{{ data.difficulty[0] if data.difficulty is defined else 1 }});"></div>
+                    <input type="number" name="difficulty" id="difficulty" value="{{ data.difficulty[0] if data.difficulty is defined else 1 }}" min="1" max="5" required>
+                </div>
+                <div class="field">
+                    <input type="checkbox" name="auto" id="auto" checked="{{ 'checked' if data.auto is defined else ' '}}" />
+                    <label for="auto">Auto complete?</label>
+                </div>
+                <input class="submit" type="submit" value="Valider">
+            </form>
+        </div>
+    </div>
+{% endblock %} 
+
+{% block script %}
+    <script>
+        var dif_td = document.querySelector("#dif");
+        dif_td.lastElementChild.addEventListener("change", (event) => {
+            dot = event.target.parentNode.children[2];
+            dot.style.backgroundColor = `var(--difficulty-${event.target.value})`;
+            });
+    </script>
+{% endblock %}

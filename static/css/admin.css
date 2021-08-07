@@ -10,6 +10,22 @@ body {
     overflow: auto;
 }
 
+.createAch {
+    background-color: var(--secondary-color);
+    width: fit-content;
+    padding: 40px 100px 30px 100px;
+    border-radius: 20px;
+}
+.createAch h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.field {
+    margin: 20px auto;
+    width: fit-content;
+}
+
 input[type="text"], input[type="number"] {
 	font-family: "Exo 2";
 	font-size: 15px;

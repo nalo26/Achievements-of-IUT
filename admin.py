@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, g
+from flask import Blueprint, redirect, request, g, url_for
 from sqlite3 import OperationalError, IntegrityError
 import functools
 
@@ -72,10 +72,30 @@ def manage_achievements():
     achievements = base.execute("SELECT * FROM achievement").fetchall()
     return render_template("admin/achievements_manage.html", achievements=achievements, admin_id=admin_id)
 
-@bp.route('/create', methods=['GET', 'POST'])
+@bp.route('/create')
 @admin_required
-def create_achievement():
-    return ""
+def _create_achievement():
+    return redirect(url_for('admin.manage_achievements'))
+    
+@bp.route('/create/<int:parent_id>', methods=['GET', 'POST'])
+@admin_required
+def create_achievement(parent_id):
+    base = get_db()
+    parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (parent_id,)).fetchone()
+    if parent is None: return redirect(url_for('admin.manage_achievements'))
+    
+    data = {}
+    if request.method == 'POST':
+        data = request.form.to_dict(False)
+        auto = bool(request.form.get('auto') is not None) 
+        base.execute("INSERT INTO achievement (name, lore, difficulty, parent_id, auto_complete)" +\
+                     "VALUES (?, ?, ?, ?, ?)",
+                     (request.form['name'], request.form['lore'], request.form['difficulty'], parent_id, auto,))
+        base.commit()
+        return redirect(url_for('admin.manage_achievements'))
+        
+    
+    return render_template("admin/create.html", data=data, parent=parent['name'], admin_id=admin_id)
 
 
 @bp.route('/delete', methods=['POST'])
@@ -94,7 +114,7 @@ def delete():
     except (OperationalError, IntegrityError):
         return response({'success': False}, 500)
     
-    return redirect("/achievements")
+    return response({'success': True})
 
 
 def delete_achievement(ach_id, dif):
