@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin • Achievements{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="admin">
+        <form method="post">
+            <input class="submit" type="submit" value="Enregistrer">
+            <table class="table">
+                <thead>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Difficulté</th>
+                    <th scope="col">Actions</th>
+                </thead>
+                <tbody>
+                    {% for ach in achievements %}
+                        <tr>
+                            <td><input type="text" name="name-{{ ach.id_achievement }}" id="name-{{ ach.id_achievement }}" value="{{ ach.name }}" /></td>
+                            <td><textarea name="lore-{{ ach.id_achievement }}" id="lore-{{ ach.id_achievement }}" rows="2" cols="50">{{ ach.lore }}</textarea></td>
+                            <td class="dif">
+                                <div class="dot" style="background-color: var(--difficulty-{{ ach.difficulty }});"></div>
+                                <input type="number" name="difficulty-{{ ach.id_achievement }}" id="difficulty-{{ ach.id_achievement }}" value="{{ ach.difficulty }}" min="1" max="5"/>
+                            </td>
+                            <td><input type="button" id="create" value="+" />&nbsp;&nbsp;<input type="button" id="delete" value="-" /></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input class="submit" type="submit" value="Enregistrer">
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var dif_td = document.querySelectorAll(".dif");
+        for (let i = 0; i < dif_td.length; i++) {
+            dif_td[i].lastElementChild.addEventListener("change", (event) => {
+                dot = event.target.parentNode.firstElementChild;
+                dot.style.backgroundColor = `var(--difficulty-${event.target.value})`;
+            });
+        }
+    </script>
+{% endblock %}

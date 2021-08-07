@@ -42,7 +42,7 @@ def manage_users():
         base.commit()
         
     users = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user)").fetchall()
-    return render_template("admin/users_manage.html", users=users)
+    return render_template("admin/users_manage.html", users=users, admin_id=admin_id)
 
 @bp.route('/achievements')
 @admin_required
@@ -50,4 +50,4 @@ def manage_achievements():
     base = get_db()
     achievements = base.execute("SELECT * FROM achievement").fetchall()
     
-    return render_template("admin/users_manage.html", achievements=achievements)
+    return render_template("admin/achievements_manage.html", achievements=achievements, admin_id=admin_id)

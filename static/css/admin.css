@@ -10,13 +10,37 @@ body {
     overflow: auto;
 }
 
-.admin input:not([type="submit"]) {
+input[type="text"], input[type="number"] {
 	font-family: "Exo 2";
 	font-size: 15px;
     margin-top: 5px;
     height: 30px;
     border: 2px solid var(--light-link);
     border-radius: 7px;
+}
+textarea {
+    border: 2px solid var(--light-link);
+    border-radius: 7px;
+}
+
+input[type="button"] {
+    font-family: "Exo 2";
+	font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: transparent;
+    transition: background-color;
+}
+#delete {
+    color: var(--difficulty-4);
+    border-color: var(--difficulty-4);
+}
+#create {
+    color: var(--difficulty-1);
+    border-color: var(--difficulty-1);
 }
 
 .submit {
@@ -35,10 +59,21 @@ body {
     transition-property: background-color;
 }
 
-.submit:hover {
+.submit:hover, #create:hover {
     background-color: #306932;
     transition-duration: 0.4s;
 }
-.submit:not(hover) {
+#delete:hover {
+    background-color: #6e1c1c;
     transition-duration: 0.4s;
+}
+.submit:not(hover), input[type="button"] {
+    transition-duration: 0.4s;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
 }
