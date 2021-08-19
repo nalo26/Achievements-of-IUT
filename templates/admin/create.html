@@ -26,7 +26,7 @@
                     <input type="number" name="difficulty" id="difficulty" value="{{ data.difficulty[0] if data.difficulty is defined else 1 }}" min="1" max="5" required>
                 </div>
                 <div class="field">
-                    <input type="checkbox" name="auto" id="auto" checked="{{ 'checked' if data.auto is defined else ' '}}" />
+                    <input type="checkbox" name="auto" id="auto" {{ 'checked' if data.auto is defined else ''}} />
                     <label for="auto">Auto complete?</label>
                 </div>
                 <input class="submit" type="submit" value="Valider">

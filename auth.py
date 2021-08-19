@@ -90,5 +90,5 @@ def get_login_url():
 
 def get_last_page():
     page = session.get('page')
-    if page is None: page = url_for("/achievements", cat_id=0)
+    if page is None: page = url_for("achievements", cat_id=0)
     return page
