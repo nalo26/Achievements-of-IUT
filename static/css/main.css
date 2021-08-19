@@ -41,6 +41,12 @@ body {
     box-shadow: -15px -15px 0 var(--secondary-color);
 }
 
+.links {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
 #logo {
     height: 46px;
     margin-top: 5px;
