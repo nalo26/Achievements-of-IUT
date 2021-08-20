@@ -41,10 +41,48 @@ body {
     box-shadow: -15px -15px 0 var(--secondary-color);
 }
 
-.links {
-    position: absolute;
+.github {
+    position: fixed;
     bottom: 20px;
     right: 20px;
+    background-color: var(--main-color);
+    border-radius: 50%;
+}
+.hover-detector-container {
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+}
+.hover-detector {
+    position: relative;
+    left: -50%;
+    width: 364px;
+    height: 78px;
+}
+.about-container {
+    pointer-events: none;
+    position: fixed;
+    left: 50%;
+    bottom: -70px;
+}
+.about { 
+    pointer-events: none;
+    position: relative;
+    padding: 10px 30px;
+    left: -50%;
+    background-color: var(--secondary-color);
+    border-radius: 15px;
+    overflow: hidden;
+}
+.about p {
+    display: inline-block;
+}
+.about a {
+    color: white;
+    text-decoration: none;
+}
+.about a:hover {
+    text-decoration: underline;
 }
 
 #logo {

@@ -34,12 +34,38 @@
     </nav>
 
     {% block content %}{% endblock %}
-    <div class="links">
-        <a href="https://github.com/nalo26/Achievements-of-IUT">
+    <div class="github">
+        <a target="_blank" href="https://github.com/nalo26/Achievements-of-IUT">
             <img alt="Code source" title="Code source" src="{{ url_for('static', filename='github.png') }}">
         </a>
     </div>
 
-    {% block script %}{% endblock %}
+    <div class="hover-detector-container">
+        <div class="hover-detector"></div>
+    </div>
+    <div class="about-container">
+        <div class="about">
+            Made with <p style="color: red;">♥</p> 
+            by <p style="color: #e19dff;">Émilie Vey</p> using 
+            <a target="_blank" href="https://flask.palletsprojects.com">Flask</a> 
+            @ 2021
+        </div>
+    </div>
 
+    {% block script %}{% endblock %}
+    <script>
+        /* document.onmousemove = function(e) {
+            console.log(e.clientX, e.clientY);
+        } */
+        var hover_detector = document.querySelector(".hover-detector");
+        hover_detector.addEventListener("mouseenter", e => {
+            let about = document.querySelector(".about-container");
+            about.style.transitionDuration = "0.4s";
+            about.style.bottom = "10px";
+        });
+        hover_detector.addEventListener("mouseleave", e => {
+            let about = document.querySelector(".about-container");
+            about.style.bottom = "-70px";
+        });
+    </script>
 </body>
