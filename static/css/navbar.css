@@ -44,7 +44,3 @@
     padding: 0;
     z-index: 1;
 }
-
-.active {
-	background-color: var(--dark-link);
-}
