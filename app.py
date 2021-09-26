@@ -29,15 +29,16 @@ db.init_app(app)
 @app.route('/achievement')
 @app.route('/achievements')
 def main():
-    return redirect('/achievements/0')
+    return redirect('/0')
 
 @app.route('/achievement/<int:cat_id>')
+@app.route('/achievements/<int:cat_id>')
 def achievement(cat_id):
-    return redirect(f"/achievements/{cat_id}")
+    return redirect(f"/{cat_id}")
 
 
 # ---------------------------------------------------------------------------------------
-@app.route('/achievements/<int:cat_id>')
+@app.route('/<int:cat_id>')
 def achievements(cat_id):
     achievements_data, _ = read_achievements()
     if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')

@@ -21,7 +21,7 @@ def user():
         
         req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
                         "FROM done JOIN achievement USING(id_achievement) " + \
-                        "WHERE id_user = ? GROUP BY difficulty " + \
+                        "WHERE id_user = ? AND complete = 1 GROUP BY difficulty " + \
                         "ORDER BY difficulty", (user_id,))
         difficulties = [0]*5
         for r in req.fetchall():
@@ -50,7 +50,7 @@ def user():
             "global_rank"            : rank,
             "year_rank"              : year_rank,
             "completed_achievements" : [
-                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM done WHERE id_user = ?", (user_id,)).fetchall()
+                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM done WHERE id_user = ? and complete = 1", (user_id,)).fetchall()
             ]
         }
         return response(ret)

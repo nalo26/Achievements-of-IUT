@@ -1,6 +1,7 @@
 import os
 from requests_oauthlib import OAuth2Session
 from flask import Blueprint, g, redirect, request, session, url_for
+from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 
 from db import get_db
 
@@ -48,7 +49,8 @@ def oauth_callback():
         g.user = db.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
                             (discord_user['id'],)).fetchone()
         return redirect(get_last_page())
-    except Exception: return redirect(get_login_url())
+    except Exception as e:
+        return redirect(get_login_url())
 
 
 @bp.route('/logout')
@@ -65,7 +67,30 @@ def load_logged_in_user():
     if token is None:
         g.user = None
     else:
-        g.user = get_db_user_by_id(get_discord_user(token)['id'])
+        # print(token)
+        try:
+            g.user = get_db_user_by_id(get_discord_user(token)['id'])
+        except TokenExpiredError:        
+            token = refresh_token()
+            g.user = get_db_user_by_id(get_discord_user(token)['id'])
+            
+
+def refresh_token():
+    token = session['discord_token']
+
+    extra = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+    }
+
+    def token_updater(token):
+        session['discord_token'] = token
+
+    discord = OAuth2Session(client_id, token=token, auto_refresh_kwargs=extra,
+                            auto_refresh_url=token_url, token_updater=token_updater)
+
+    discord.get(base_discord_api_url + '/users/@me')
+    return session['discord_token']
 
 
 def get_discord_user(token):
