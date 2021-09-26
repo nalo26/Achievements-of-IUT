@@ -38,11 +38,18 @@ CREATE TABLE done(
    FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
 );
 
-CREATE TABLE event(
+CREATE TABLE event_save_score(
    id_event INTEGER PRIMARY KEY AUTOINCREMENT,
    event_time DATETIME DEFAULT CURRENT_TIMESTAMP,
    id_user INTEGER NOT NULL,
    id_achievement INTEGER NOT NULL,
    FOREIGN KEY(id_user) REFERENCES user(id_user),
+   FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
+);
+
+CREATE TABLE event_new_ach(
+   id_event INTEGER PRIMARY KEY AUTOINCREMENT,
+   event_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+   id_achievement INTEGER NOT NULL,
    FOREIGN KEY(id_achievement) REFERENCES achievement(id_achievement)
 );

@@ -11,6 +11,7 @@ config.read('config.ini')
 
 DB = None
 DIFFICULTIES = [0x6AA84F, 0x4A86EF, 0xE69137, 0xB10000, 0x674EA7]
+SYMBOLS = [':green_square:', ':blue_square:', ':orange_square:', ':red_square:', ':purple_square:']
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = 'rpg!', intents=intents)
@@ -18,6 +19,7 @@ client = commands.Bot(command_prefix = 'rpg!', intents=intents)
 guild_ids = int(config['DiscordBot']['guild_id'])
 channel_id = int(config['DiscordBot']['channel_id'])
 admin_role_id = int(config['DiscordBot']['admin_role_id'])
+ping_role_id = int(config['DiscordBot']['ping_role_id'])
 guild = None
 channel = None
 
@@ -48,6 +50,15 @@ async def on_member_update(before, after):
     except ValueError: return
     db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
 
+
+@client.command()
+async def roles(ctx):
+    if not is_admin(ctx.message.author): return
+    db = get_db()
+    role = ctx.guild.get_role(ping_role_id)
+
+    for u in db.execute("SELECT * FROM user").fetchall():
+        await ctx.guild.get_member(u['id_user']).add_roles(role)
 
 @client.command(aliases=['syncro'])
 async def sync(ctx, member:discord.Member = None):
@@ -165,7 +176,31 @@ def get_db():
         DB.row_factory = sqlite3.Row
     return DB
 
-def embed_event(event):
+def embed_new_ach(event):
+    db = get_db()
+    ach = db.execute("SELECT * FROM achievement WHERE id_achievement = ?", (event['id_achievement'],)).fetchone()
+    ach_list = [ach]
+    while ach['parent_id'] is not None:
+        ach = db.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
+        ach_list.append(ach)
+
+    ach = ach_list[0]
+    embed = discord.Embed(title=ach['name'], color=DIFFICULTIES[ach['difficulty']-1])
+    desc = "*" + ach['lore'].replace('<br>', '\n') + "*\n\n"
+    for i, a in enumerate(ach_list[::-1]):
+        if i != 0: desc += f"{'─'*((i-1)*3)}└──"
+        desc += SYMBOLS[a['difficulty']-1] + " "
+        if i == len(ach_list)-1: desc += f"**{a['name']}** :new:"
+        else: desc += a['name']
+        desc += "\n"
+    embed.description = desc
+    embed.set_footer(text = "Créé le")
+    embed.timestamp = datetime.strptime(event['event_time'], "%Y-%m-%d %H:%M:%S")
+
+    return embed
+
+
+def embed_save_score(event):
     user = rq.get(f"{api_uri}/get_user?id={event['id_user']}").json()
     ach  = rq.get(f"{api_uri}/get_achievement?id={event['id_achievement']}").json()
     embed = discord.Embed(title=ach.get('name'), color=DIFFICULTIES[ach.get('difficulty')-1])
@@ -174,7 +209,7 @@ def embed_event(event):
         url=f"{base_uri}/profile/{user.get('id_user')}",
         icon_url=guild.get_member(user.get('id_user')).avatar_url
     )
-    embed.description = ach.get('lore')
+    embed.description = ach.get('lore').replace('<br>', '\n')
     embed.set_footer(text = "Réalisé le")
     embed.timestamp = datetime.strptime(event['event_time'], "%Y-%m-%d %H:%M:%S")
     
@@ -189,13 +224,30 @@ async def background_task():
     db = get_db()
     
     while not client.is_closed():
-        events = db.execute("SELECT * FROM event ORDER BY id_event").fetchall()
-        for event in events:
-            db.execute("DELETE FROM event WHERE id_event = ?", (event['id_event'],))
+        events_new_ach = db.execute("SELECT * FROM event_new_ach ORDER BY id_event").fetchall()
+        for i, event in enumerate(events_new_ach):
+            db.execute("DELETE FROM event_new_ach WHERE id_event = ?", (event['id_event'],))
             db.commit()
-            await channel.send(embed=embed_event(event))
+            if i == 0:
+                are_some = len(events_new_ach) > 1
+                text = f"<@&{ping_role_id}> {len(events_new_ach)} "
+                text += "nouveaux" if are_some else "nouvel"
+                text += f" achievement{'s' if are_some else ''} "
+                text += "sont" if are_some else "est"
+                text += f" disponible{'s' if are_some else ''} ! :bell:"
+                await channel.send(text, embed=embed_new_ach(event))
+            else:
+                await channel.send(embed=embed_new_ach(event))
             await asyncio.sleep(2)
-        await asyncio.sleep(30)
+        
+        events_save_score = db.execute("SELECT * FROM event_save_score ORDER BY id_event").fetchall()
+        for event in events_save_score:
+            db.execute("DELETE FROM event_save_score WHERE id_event = ?", (event['id_event'],))
+            db.commit()
+            await channel.send(embed=embed_save_score(event))
+            await asyncio.sleep(2)
+
+        await asyncio.sleep(28)
 
 
 client.loop.create_task(background_task())

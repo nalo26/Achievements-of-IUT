@@ -41,8 +41,8 @@ def achievement(cat_id):
 @app.route('/<int:cat_id>')
 def achievements(cat_id):
     achievements_data, _ = read_achievements()
-    if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/achievements/0')
-    session['page'] = f"/achievement/{cat_id}"
+    if cat_id < 0 or cat_id >= len(achievements_data): return redirect('/0')
+    session['page'] = f"/{cat_id}"
     
     return render_template('achievements.html', achievements=achievements_data, category=cat_id,
                            login_url=auth.get_login_url(), admin_id=admin.admin_id)
@@ -136,7 +136,7 @@ def save_score(action, user_id, ach, allowed=True):
         done = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", (user_id, ach_id)).fetchone()
         if done is None:
             base.execute("INSERT INTO done  (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
-            base.execute("INSERT INTO event (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
+            base.execute("INSERT INTO event_save_score (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
         else:
             base.execute("UPDATE done SET complete = 1 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
         base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user_id,))

@@ -92,6 +92,10 @@ def create_achievement(parent_id):
                      "VALUES (?, ?, ?, ?, ?)",
                      (request.form['name'], request.form['lore'], request.form['difficulty'], parent_id, auto,))
         base.commit()
+        last_row_id = base.execute("SELECT id_achievement FROM achievement WHERE name = ? AND lore = ?",
+                     (request.form['name'], request.form['lore'],)).fetchone()['id_achievement']
+        base.execute("INSERT INTO event_new_ach (id_achievement) VALUES (?)", (last_row_id,))
+        base.commit()
         return redirect(url_for('admin.manage_achievements'))
         
     
@@ -129,6 +133,6 @@ def delete_achievement(ach_id, dif):
         ")", (ach_id,)
     )
     base.execute("DELETE FROM done WHERE id_achievement = ?", (ach_id,))
-    base.execute("DELETE FROM event WHERE id_achievement = ?", (ach_id,))
+    base.execute("DELETE FROM event_save_score WHERE id_achievement = ?", (ach_id,))
     base.execute("DELETE FROM achievement WHERE id_achievement = ?", (ach_id,))
     base.commit()
