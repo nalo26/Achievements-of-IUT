@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tree.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div style="margin: auto; width: fit-content;">
+        <div class="info">
+            <h1 class="page-name">Statistiques</h1>
+            <table>
+                {%- for key, value in statistics -%}
+                    <tr>
+                        <td>{{ key }} :</td>
+                        <td class="value">{{ value }}</td>
+                    </tr>
+                {%- endfor -%}
+            </table>
+            <div class="entry sole">
+                <span class="label" style="border-color: var(--difficulty-{{achievement.difficulty}});">
+                    <p class="title">{{ achievement.name }}</p>
+                    <i>{{ achievement.lore }}</i>
+                </span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

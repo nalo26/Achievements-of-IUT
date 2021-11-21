@@ -10,7 +10,7 @@
     <div style="margin: auto; width: fit-content;">
         <div class="info">
             <img id="pp" src="{{ user.avatar }}"/>
-            <h1>{{ user.firstname }} {{ user.lastname}}</h1>
+            <h1 class="name">{{ user.firstname }} {{ user.lastname}}</h1>
         </div>
 
         <div class="info">
@@ -24,7 +24,7 @@
             <table>
                 <tr>
                     <td>Score total :</td>
-                    <td class="value">{{ user.score }}</td>
+                    <td class="value">{{ user.score }} / {{ max_score }}</td>
                 </tr>
                 <tr>
                     <td>Achievements complétés :</td>

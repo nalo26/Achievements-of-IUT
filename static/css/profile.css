@@ -18,10 +18,15 @@ body {
     vertical-align: middle;
 }
 
-h1 {
+.name {
     margin: 0 0 0 15px;
     display: inline-block;
     word-break: break-word;
+}
+
+.page-name {
+    margin: 15px 20px 40px 20px;
+    text-align: center;
 }
 
 h2 {
@@ -45,4 +50,13 @@ tr {
 
 .info a {
     color: #8c9bd6;
+}
+
+.entry {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.entry:after {
+    border: none !important;
 }

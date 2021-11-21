@@ -25,6 +25,11 @@ auth.init_config(config)
 admin.init_config(config)
 db.init_app(app)
 
+# @app.before_request
+# def limit_remote_addr():
+#     if request.remote_addr != config['Flask']['authorized']:
+#         abort(403, "Site en maintenance !")
+
 @app.route('/')
 @app.route('/achievement')
 @app.route('/achievements')
@@ -114,6 +119,8 @@ def profile(user_id):
         ).fetchall()
     ]
     year_rank = year_users.index(user_id) + 1
+
+    max_score = base.execute("SELECT SUM(difficulty) data FROM achievement").fetchone()['data']
     
     req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
                        "FROM done JOIN achievement USING(id_achievement) " + \
@@ -125,8 +132,46 @@ def profile(user_id):
     
     return render_template('profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
                            ach_amount=ach_amount, rank=rank, user_amount=len(users), year_rank=year_rank, year_user_amount=len(year_users),
-                           login_url=auth.get_login_url(), admin_id=admin.admin_id)
+                           max_score=max_score, login_url=auth.get_login_url(), admin_id=admin.admin_id)
 
+
+@app.route("/stat")
+@app.route("/stats")
+@app.route("/statistic")
+@app.route("/statistics")
+def statistics():
+    session['page'] = "/statistics"
+    base = db.get_db()
+    stats = []
+
+    a = base.execute("SELECT COUNT(id_user) data FROM user").fetchone()['data']
+    s = base.execute("SELECT COUNT(id_user) data FROM discord_user").fetchone()['data']
+    stats.append(("Nombre de participants", f"{a} / {s}"))
+
+
+    a = base.execute("SELECT AVG(score) data FROM user").fetchone()['data']
+    s = base.execute("SELECT SUM(difficulty) data FROM achievement").fetchone()['data']
+    stats.append(("Score moyen", f"{round(a)} / {s}"))
+
+    res = base.execute("SELECT SUM(score) data FROM user").fetchone()['data']
+    stats.append(("Score cumulé", res))
+
+    a = base.execute("SELECT AVG(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
+    s = base.execute("SELECT COUNT(id_achievement) data FROM achievement").fetchone()['data']
+    stats.append(("Nombre moyen d'achievements réalisés", f"{round(a)} / {s}"))
+
+    res = base.execute("SELECT SUM(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
+    stats.append(("Nombre cumulé d'achievements réalisés", res))
+
+    res = base.execute("SELECT year, AVG(score) avg_score FROM user JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score").fetchall()
+    stats.append(("Meilleure promo (score moyen)", f"{res[-1]['year']} ({round(res[-1]['avg_score'])} pts)"))
+
+    res = base.execute("SELECT id_achievement id, COUNT(id_achievement) c FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 GROUP BY id_achievement ORDER BY c DESC").fetchone()
+    stats.append(("Achievement le plus réalisé", f"x {res['c']}"))
+
+    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (res['id'],)).fetchone()
+
+    return render_template('statistics.html', statistics=stats, achievement=ach)
 
 def save_score(action, user_id, ach, allowed=True):
     ach_id = ach['id_achievement']

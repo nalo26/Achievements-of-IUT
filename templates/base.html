@@ -10,7 +10,8 @@
     <nav class="navbar">
         <li><img id="logo" alt='logo' src="{{ url_for('static', filename='logo.png') }}"/>
         <li><a href="/achievements">Achievements</a></li>
-        <li style="float:right"><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
+        <li style="float:right"><a href="{{ url_for('leaderboard') }}">Classement</a></li>
+        <li style="float:right"><a href="{{ url_for('statistics') }}">Statistiques</a></li>
         {% if g.user %}
             <li style="float:right"><a href="{{ url_for('profile', user_id=g.user.id_user) }}">{{ g.user.firstname }} {{ g.user.lastname }} ▼</a>
                 <ul>
