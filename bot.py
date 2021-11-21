@@ -44,11 +44,12 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_member_update(before, after):
     if len(before.roles) <= len(after.roles) and before.display_name == after.display_name: return
-    db = get_db()
-    if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (after.id,)).fetchone() is not None: return
-    try: m_id, fn, ln, year, av = get_user_info(after)
-    except ValueError: return
-    db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
+    # db = get_db()
+    # if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (after.id,)).fetchone() is not None: return
+    # try: m_id, fn, ln, year, av = get_user_info(after)
+    # except ValueError: return
+    # db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
+    sync(None, after, False)
 
 
 @client.command()
@@ -61,22 +62,22 @@ async def roles(ctx):
         await ctx.guild.get_member(u['id_user']).add_roles(role)
 
 @client.command(aliases=['syncro'])
-async def sync(ctx, member:discord.Member = None):
+async def sync(ctx, member:discord.Member = None, feedback = True):
     if not is_admin(ctx.message.author): return
     db = get_db()
     
     if member is not None:
         try: m_id, fn, ln, year, av = get_user_info(member)
         except ValueError: 
-            await ctx.send(":x: Couldn't gather member information.")
+            if feedback: await ctx.send(":x: Couldn't gather member information.")
             return
         if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (member.id,)).fetchone() is not None: 
             db.execute("UPDATE discord_user SET firstname = ?, lastname = ?, year = ?, avatar = ? WHERE id_user = ?",
-                       (fn, ln, year, m_id, av,))
+                       (fn, ln, year, av, m_id,))
         else: 
             db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
         db.commit()
-        await ctx.send(f":white_check_mark: Successfully synchronized `{fn} {ln} [{year}]`.")
+        if feedback: await ctx.send(f":white_check_mark: Successfully synchronized `{fn} {ln} [{year}]`.")
         return
     
     db.execute("DELETE FROM discord_user")
@@ -88,9 +89,9 @@ async def sync(ctx, member:discord.Member = None):
                    (m_id, fn, ln, year, av,))
         count += 1
     db.commit()
-    
-    if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
-    else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
+    if feedback:
+        if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
+        else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
     
 @client.command(aliases=['profil', 'me'])
 async def profile(ctx, member:discord.Member = None):
