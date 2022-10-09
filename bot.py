@@ -5,6 +5,7 @@ import psycopg2
 import asyncio
 import requests as rq
 from datetime import datetime
+from dateutil import parser
 
 config = configparser.ConfigParser()
 config.read('dev.config.ini')
@@ -126,7 +127,8 @@ async def profile(ctx, member:discord.Member = None):
     embed.add_field(name=f"Achievements complétés : {len(user.get('completed_achievements'))}", value=ach)
     
     embed.set_footer(text = "A rejoint le")
-    embed.timestamp = datetime.strptime(user.get('join_date'), "%Y-%m-%d %H:%M:%S")
+    #                                                           Sat, 18 Sep 2021 16:46:00 GMT
+    embed.timestamp = parser.parse(user.get('join_date'))
     
     await ctx.send(embed=embed)
 
@@ -210,7 +212,7 @@ def embed_new_ach(event):
         desc += "\n"
     embed.description = desc
     embed.set_footer(text = "Créé le")
-    embed.timestamp = datetime.strptime(event['event_time'], "%Y-%m-%d %H:%M:%S")
+    embed.timestamp = parser.parse(event['event_time'])
 
     return embed
 
@@ -226,7 +228,7 @@ def embed_save_score(event):
     )
     embed.description = ach.get('lore').replace('<br>', '\n')
     embed.set_footer(text = "Réalisé le")
-    embed.timestamp = datetime.strptime(event['event_time'], "%Y-%m-%d %H:%M:%S")
+    embed.timestamp = parser.parse(event['event_time'])
     
     return embed
 
