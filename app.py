@@ -107,11 +107,11 @@ def leaderboard(year):
 def profile(user_id):
     session['page'] = f"/profile/{user_id}"
     _, cursor = db.get_db()
-    cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = %s", (user_id,))
+    cursor.execute("SELECT * FROM users AS u JOIN discord_user d USING(id_user) WHERE u.id_user = %s", (user_id,))
     user = cursor.fetchone()
     if user is None: abort(404, f"No user with ID {user_id} was found.")
 
-    datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
+    datejoin = user['joindate']
     cursor.execute("SELECT * FROM done WHERE complete = TRUE AND id_user = %s", (user_id,))
     ach_complete = len(cursor.fetchall())
     cursor.execute("SELECT * FROM achievement")
@@ -125,7 +125,7 @@ def profile(user_id):
     year_users = [r['id_user'] for r in cursor.fetchall()]
     year_rank = year_users.index(user_id) + 1
 
-    cursor.execute("SELECT SUM(difficulty) data FROM achievement")
+    cursor.execute("SELECT SUM(difficulty) AS data FROM achievement")
     max_score = cursor.fetchone()['data']
     
     cursor.execute("SELECT difficulty, count(difficulty) AS amount " + \

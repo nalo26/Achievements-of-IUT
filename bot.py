@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import configparser
 import psycopg2
+import psycopg2.extras
 import asyncio
 import requests as rq
 from datetime import datetime
@@ -187,7 +188,7 @@ def get_db():
             user=USERNAME,
             password=PASSWORD
         )
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         DB = (connection, cursor)
     return DB
 
@@ -212,7 +213,7 @@ def embed_new_ach(event):
         desc += "\n"
     embed.description = desc
     embed.set_footer(text = "Créé le")
-    embed.timestamp = parser.parse(event['event_time'])
+    embed.timestamp = event['event_time']
 
     return embed
 
@@ -228,7 +229,7 @@ def embed_save_score(event):
     )
     embed.description = ach.get('lore').replace('<br>', '\n')
     embed.set_footer(text = "Réalisé le")
-    embed.timestamp = parser.parse(event['event_time'])
+    embed.timestamp = event['event_time']
     
     return embed
 
