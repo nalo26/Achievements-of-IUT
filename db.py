@@ -1,4 +1,4 @@
-import sqlite3
+import psycopg2
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
@@ -22,13 +22,10 @@ def init_config(config):
 
 
 def init_db():
-    db = get_db()
+    connection, _ = get_db()
 
     with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-        
-    with current_app.open_resource('populate.sql') as f:
-        db.executescript(f.read().decode('utf8'))
+        connection.execute(f.read().decode('utf8'))
 
 
 @click.command('init-db')
@@ -40,17 +37,24 @@ def init_db_command():
 
 
 def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types = sqlite3.PARSE_DECLTYPES
+    if 'db_connected' not in g:
+        connection = psycopg2.connect(
+            host=HOST,
+            database=DATABASE,
+            user=USERNAME,
+            password=PASSWORD
         )
-        g.db.row_factory = sqlite3.Row
-    return g.db
+        g.connection = connection
+        g.cursor = connection.cursor()
+        g.db_connected = True
+    return g.connection, g.cursor
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
-
-    if db is not None:
-        db.close()
+    cursor = g.pop('cursor', None)
+    if cursor is not None:
+        cursor.close()
+        
+    connection = g.pop('connection', None)
+    if connection is not None:
+        connection.close()

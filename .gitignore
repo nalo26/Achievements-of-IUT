@@ -2,4 +2,5 @@
 __pycache__/
 
 instance/
-config.ini
+dev.config.ini
+dump.sql

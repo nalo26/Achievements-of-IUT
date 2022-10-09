@@ -1,13 +1,18 @@
 import discord
 from discord.ext import commands
 import configparser
-import sqlite3
+import psycopg2
 import asyncio
 import requests as rq
 from datetime import datetime
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('dev.config.ini')
+
+HOST = config['Database']['host']
+DATABASE = config['Database']['base']
+USERNAME = config['Database']['user']
+PASSWORD = config['Database']['pass']
 
 DB = None
 DIFFICULTIES = [0x6AA84F, 0x4A86EF, 0xE69137, 0xB10000, 0x674EA7]
@@ -44,51 +49,55 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_member_update(before, after):
     if len(before.roles) <= len(after.roles) and before.display_name == after.display_name: return
-    # db = get_db()
-    # if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (after.id,)).fetchone() is not None: return
+    # connection, cursor = get_db()
+    # cursor.execute("SELECT * FROM discord_user WHERE id_user = %s", (after.id,))
+    # if cursor.fetchone() is not None: return
     # try: m_id, fn, ln, year, av = get_user_info(after)
     # except ValueError: return
-    # db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
+    # cursor.execute("INSERT INTO discord_user VALUES (%s, %s, %s, %s, %s)", (m_id, fn, ln, year, av,))
+    # connection.commit()
     sync(None, after, False)
 
 
 @client.command()
 async def roles(ctx):
     if not is_admin(ctx.message.author): return
-    db = get_db()
+    connection, cursor = get_db()
     role = ctx.guild.get_role(ping_role_id)
-
-    for u in db.execute("SELECT * FROM users").fetchall():
+    
+    cursor.execute("SELECT * FROM users")
+    for u in cursor.fetchall():
         await ctx.guild.get_member(u['id_user']).add_roles(role)
 
 @client.command(aliases=['syncro'])
 async def sync(ctx, member:discord.Member = None, feedback = True):
     if not is_admin(ctx.message.author): return
-    db = get_db()
+    connection, cursor = get_db()
     
     if member is not None:
         try: m_id, fn, ln, year, av = get_user_info(member)
         except ValueError: 
             if feedback: await ctx.send(":x: Couldn't gather member information.")
             return
-        if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (member.id,)).fetchone() is not None: 
-            db.execute("UPDATE discord_user SET firstname = ?, lastname = ?, year = ?, avatar = ? WHERE id_user = ?",
+        cursor.execute("SELECT * FROM discord_user WHERE id_user = %s", (member.id,))
+        if cursor.fetchone() is not None: 
+            cursor.execute("UPDATE discord_user SET firstname = %s, lastname = %s, year = %s, avatar = %s WHERE id_user = %s",
                        (fn, ln, year, av, m_id,))
         else: 
-            db.execute("INSERT INTO discord_user VALUES (?, ?, ?, ?, ?)", (m_id, fn, ln, year, av,))
-        db.commit()
+            cursor.execute("INSERT INTO discord_user VALUES (%s, %s, %s, %s, %s)", (m_id, fn, ln, year, av,))
+        connection.commit()
         if feedback: await ctx.send(f":white_check_mark: Successfully synchronized `{fn} {ln} [{year}]`.")
         return
     
-    db.execute("DELETE FROM discord_user")
+    cursor.execute("DELETE FROM discord_user")
     count = 0
     for m in guild.members:
         try: m_id, fn, ln, year, av = get_user_info(m)
         except ValueError: continue
-        db.execute("INSERT INTO discord_user (id_user, firstname, lastname, year, avatar) VALUES (?, ?, ?, ?, ?)",
+        cursor.execute("INSERT INTO discord_user (id_user, firstname, lastname, year, avatar) VALUES (%s, %s, %s, %s, %s)",
                    (m_id, fn, ln, year, av,))
         count += 1
-    db.commit()
+    connection.commit()
     if feedback:
         if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
         else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
@@ -170,19 +179,24 @@ def is_admin(user):
 def get_db():
     global DB
     if DB is None:
-        DB = sqlite3.connect(
-            'instance/database.sqlite',
-            detect_types = sqlite3.PARSE_DECLTYPES
+        connection = psycopg2.connect(
+            host=HOST,
+            database=DATABASE,
+            user=USERNAME,
+            password=PASSWORD
         )
-        DB.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        DB = (connection, cursor)
     return DB
 
 def embed_new_ach(event):
-    db = get_db()
-    ach = db.execute("SELECT * FROM achievement WHERE id_achievement = ?", (event['id_achievement'],)).fetchone()
+    connection, cursor = get_db()
+    cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (event['id_achievement'],))
+    ach = cursor.fetchone()
     ach_list = [ach]
     while ach['parent_id'] is not None:
-        ach = db.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
+        cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (ach['parent_id'],))
+        ach = cursor.fetchone()
         ach_list.append(ach)
 
     ach = ach_list[0]
@@ -222,13 +236,14 @@ async def background_task():
     await client.wait_until_ready()
     guild = client.get_guild(guild_ids)
     channel = guild.get_channel(channel_id)
-    db = get_db()
+    connection, cursor = get_db()
     
     while not client.is_closed():
-        events_new_ach = db.execute("SELECT * FROM event_new_ach ORDER BY id_event").fetchall()
+        cursor.execute("SELECT * FROM event_new_ach ORDER BY id_event")
+        events_new_ach = cursor.fetchall()
         for i, event in enumerate(events_new_ach):
-            db.execute("DELETE FROM event_new_ach WHERE id_event = ?", (event['id_event'],))
-            db.commit()
+            cursor.execute("DELETE FROM event_new_ach WHERE id_event = %s", (event['id_event'],))
+            connection.commit()
             if i == 0:
                 are_some = len(events_new_ach) > 1
                 text = f"<@&{ping_role_id}> {len(events_new_ach)} "
@@ -241,10 +256,11 @@ async def background_task():
                 await channel.send(embed=embed_new_ach(event))
             await asyncio.sleep(2)
         
-        events_save_score = db.execute("SELECT * FROM event_save_score ORDER BY id_event").fetchall()
+        cursor.execute("SELECT * FROM event_save_score ORDER BY id_event")
+        events_save_score = cursor.fetchall()
         for event in events_save_score:
-            db.execute("DELETE FROM event_save_score WHERE id_event = ?", (event['id_event'],))
-            db.commit()
+            cursor.execute("DELETE FROM event_save_score WHERE id_event = %s", (event['id_event'],))
+            connection.commit()
             await channel.send(embed=embed_save_score(event))
             await asyncio.sleep(2)
 

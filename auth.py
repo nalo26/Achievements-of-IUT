@@ -38,16 +38,18 @@ def oauth_callback():
         )
         session['discord_token'] = token
         discord_user = get_discord_user(token)
-        db = get_db()
-        user = db.execute("SELECT * FROM users WHERE id_user = ?", (discord_user['id'],)).fetchone()
+        connection, cursor = get_db()
+        cursor.execute("SELECT * FROM users WHERE id_user = %s", (discord_user['id'],))
+        user = cursor.fetchone()
         if user is None: # register
-            if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (discord_user['id'],)).fetchone() is None:
+            cursor.execute("SELECT * FROM discord_user WHERE id_user = %s", (discord_user['id'],))
+            if cursor.fetchone() is None:
                 return "Please make sure to join the discord server before registering."
-            db.execute('INSERT INTO users (id_user) VALUES (?)', (discord_user['id'],))
-            db.commit()
+            cursor.execute('INSERT INTO users (id_user) VALUES (?)', (discord_user['id'],))
+            connection.commit()
         # login
-        g.user = db.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
-                            (discord_user['id'],)).fetchone()
+        cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = %s",(discord_user['id'],))
+        g.user = cursor.fetchone()
         return redirect(get_last_page())
     except Exception as e:
         return redirect(get_login_url())
@@ -70,9 +72,11 @@ def load_logged_in_user():
         # print(token)
         try:
             g.user = get_db_user_by_id(get_discord_user(token)['id'])
-        except TokenExpiredError:        
+        except TokenExpiredError:
             token = refresh_token()
             g.user = get_db_user_by_id(get_discord_user(token)['id'])
+        except KeyError:
+            g.user = None
             
 
 def refresh_token():
@@ -94,16 +98,19 @@ def refresh_token():
 
 
 def get_discord_user(token):
-    discord = OAuth2Session(client_id, token=token)
+    discord = OAuth2Session(client_id, token=token, scope=["identify"])
     response = discord.get(base_discord_api_url + '/users/@me')
     user = response.json()
+    # print(user)
     return user
 
 
 def get_db_user_by_id(user_id):
-    return get_db().execute(
+    _, cursor = get_db()
+    cursor.execute(
         "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)
-    ).fetchone()
+    )
+    return cursor.fetchone()
 
 
 def get_login_url():

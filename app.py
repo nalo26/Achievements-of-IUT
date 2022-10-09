@@ -65,8 +65,9 @@ def save():
     
     if data.get('type') not in ('add', 'remove'): return api.response({'success': False, 'msg': 'bad action'}, 401)
     
-    base = db.get_db()
-    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach_id,)).fetchone()
+    _, cursor = db.get_db()
+    cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (ach_id,))
+    ach = cursor.fetchone()
     if bool(ach['auto_complete']): return api.response({'success': False, 'msg': 'autocomplete'}, 401)
     
     try:
@@ -86,16 +87,17 @@ def leaderboard(year):
     if month < 7: maxyear -= 1
     if year is not None and (year < 2017 or year > maxyear): return redirect('/leaderboard')
     
-    base = db.get_db()
+    _, cursor = db.get_db()
     users = []
     
     if year is None:
         session['page'] = "/leaderboard"
-        users = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) ORDER BY score DESC").fetchall()
+        cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) ORDER BY score DESC")
+        users = cursor.fetchall()
     else:
         session['page'] = f"/leaderboard/{year}"
-        users = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
-                             (year,)).fetchall()
+        cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = %s ORDER BY score DESC", (year,))
+        users = cursor.fetchall()
         
     return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear,
                            login_url=auth.get_login_url(), admin_id=admin.admin_id)
@@ -104,31 +106,34 @@ def leaderboard(year):
 @app.route('/profile/<int:user_id>')
 def profile(user_id):
     session['page'] = f"/profile/{user_id}"
-    base = db.get_db()
-    user = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)).fetchone()
+    _, cursor = db.get_db()
+    cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = %s", (user_id,))
+    user = cursor.fetchone()
     if user is None: abort(404, f"No user with ID {user_id} was found.")
 
     datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
-    ach_complete = len(base.execute("SELECT * FROM done WHERE complete = 1 AND id_user = ?", (user_id,)).fetchall())
-    ach_amount = len(base.execute("SELECT * FROM achievement").fetchall())
+    cursor.execute("SELECT * FROM done WHERE complete = 1 AND id_user = %s", (user_id,))
+    ach_complete = len(cursor.fetchall())
+    cursor.execute("SELECT * FROM achievement")
+    ach_amount = len(cursor.fetchall())
     
-    users = [r['id_user'] for r in base.execute("SELECT * FROM users ORDER BY score DESC").fetchall()]
+    cursor.execute("SELECT * FROM users ORDER BY score DESC")
+    users = [r['id_user'] for r in cursor.fetchall()]
     rank = users.index(user_id) + 1
     
-    year_users = [r['id_user'] for r in base.execute(
-        "SELECT id_user FROM users JOIN discord_user USING(id_user) WHERE year = ? ORDER BY score DESC", (user['year'],)
-        ).fetchall()
-    ]
+    cursor.execute("SELECT id_user FROM users JOIN discord_user USING(id_user) WHERE year = %s ORDER BY score DESC", (user['year'],))
+    year_users = [r['id_user'] for r in cursor.fetchall()]
     year_rank = year_users.index(user_id) + 1
 
-    max_score = base.execute("SELECT SUM(difficulty) data FROM achievement").fetchone()['data']
+    cursor.execute("SELECT SUM(difficulty) data FROM achievement")
+    max_score = cursor.fetchone()['data']
     
-    req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
+    cursor.execute("SELECT difficulty, count(difficulty) AS amount " + \
                        "FROM done JOIN achievement USING(id_achievement) " + \
                        "WHERE complete = 1 AND id_user = ? GROUP BY difficulty " + \
                        "ORDER BY difficulty", (user_id,))
     difficulties = [0]*5
-    for r in req.fetchall():
+    for r in cursor.fetchall():
         difficulties[r['difficulty']-1] = r['amount']
     
     return render_template('profile.html', user=user, datejoin=datejoin, ach_complete=ach_complete, difficulties=difficulties, 
@@ -142,60 +147,74 @@ def profile(user_id):
 @app.route("/statistics")
 def statistics():
     session['page'] = "/statistics"
-    base = db.get_db()
+    _, cursor = db.get_db()
     stats = []
 
-    a = base.execute("SELECT COUNT(id_user) data FROM users").fetchone()['data']
-    s = base.execute("SELECT COUNT(id_user) data FROM discord_user").fetchone()['data']
+    cursor.execute("SELECT COUNT(id_user) data FROM users")
+    a = cursor.fetchone()['data']
+    cursor.execute("SELECT COUNT(id_user) data FROM discord_user")
+    s = cursor.fetchone()['data']
     stats.append(("Nombre de participants", f"{a} / {s}"))
 
 
-    a = base.execute("SELECT AVG(score) data FROM users").fetchone()['data']
-    s = base.execute("SELECT SUM(difficulty) data FROM achievement").fetchone()['data']
+    cursor.execute("SELECT AVG(score) data FROM users")
+    a = cursor.fetchone()['data']
+    cursor.execute("SELECT SUM(difficulty) data FROM achievement")
+    s = cursor.fetchone()['data']
     stats.append(("Score moyen", f"{round(a)} / {s}"))
 
-    res = base.execute("SELECT SUM(score) data FROM users").fetchone()['data']
+    cursor.execute("SELECT SUM(score) data FROM users")
+    res = cursor.fetchone()['data']
     stats.append(("Score cumulé", res))
 
-    a = base.execute("SELECT AVG(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
-    s = base.execute("SELECT COUNT(id_achievement) data FROM achievement").fetchone()['data']
+    cursor.execute("SELECT AVG(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)")
+    a = cursor.fetchone()['data']
+    cursor.execute("SELECT COUNT(id_achievement) data FROM achievement")
+    s = cursor.fetchone()['data']
     stats.append(("Nombre moyen d'achievements réalisés", f"{round(a)} / {s}"))
 
-    res = base.execute("SELECT SUM(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
+    cursor.execute("SELECT SUM(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)")
+    res = cursor.fetchone()['data']
     stats.append(("Nombre cumulé d'achievements réalisés", res))
 
-    res = base.execute("SELECT year, AVG(score) avg_score FROM users JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score").fetchall()
+    cursor.execute("SELECT year, AVG(score) avg_score FROM users JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score")
+    res = cursor.fetchall()
     stats.append(("Meilleure promo (score moyen)", f"{res[-1]['year']} ({round(res[-1]['avg_score'])} pts)"))
 
-    res = base.execute("SELECT id_achievement id, COUNT(id_achievement) c FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 GROUP BY id_achievement ORDER BY c DESC").fetchone()
+    cursor.execute("SELECT id_achievement id, COUNT(id_achievement) c FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 GROUP BY id_achievement ORDER BY c DESC")
+    res = cursor.fetchone()
     stats.append(("Achievement le plus réalisé", f"x {res['c']}"))
 
-    ach = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (res['id'],)).fetchone()
+    cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (res['id'],))
+    ach = cursor.fetchone()
 
     return render_template('statistics.html', statistics=stats, achievement=ach)
 
 def save_score(action, user_id, ach, allowed=True):
     ach_id = ach['id_achievement']
-    base = db.get_db()
+    connection, cursor = db.get_db()
     
     if action == "add" and allowed:
-        done = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", (user_id, ach_id)).fetchone()
+        cursor.execute("SELECT * FROM done WHERE id_user = %s AND id_achievement = %s", (user_id, ach_id))
+        done = cursor.fetchone()
         if done is None:
-            base.execute("INSERT INTO done  (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
-            base.execute("INSERT INTO event_save_score (id_user, id_achievement) VALUES (?, ?)", (user_id, ach_id,))
+            cursor.execute("INSERT INTO done  (id_user, id_achievement) VALUES (%s, %s)", (user_id, ach_id,))
+            cursor.execute("INSERT INTO event_save_score (id_user, id_achievement) VALUES (%s, %s)", (user_id, ach_id,))
         else:
-            base.execute("UPDATE done SET complete = 1 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
-        base.execute("UPDATE user SET score = score + ? WHERE id_user = ?", (ach['difficulty'], user_id,))
-        base.commit()
+            cursor.execute("UPDATE done SET complete = 1 where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
+        cursor.execute("UPDATE user SET score = score + %s WHERE id_user = %s", (ach['difficulty'], user_id,))
+        connection.commit()
     if action == "remove" and allowed:
-        base.execute("UPDATE done SET complete = 0 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
-        base.execute("UPDATE users SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
-        base.commit()
+        cursor.execute("UPDATE done SET complete = 0 where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
+        cursor.execute("UPDATE users SET score = score - %s WHERE id_user = %s", (ach['difficulty'], user_id,))
+        connection.commit()
         
-    parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()
+    cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (ach['parent_id'],))
+    parent = cursor.fetchone()
     if parent is not None:
         _, all_childs_completed = read_achievements(parent['id_achievement'])
-        done = base.execute("SELECT * FROM done WHERE id_user = ? AND id_achievement = ?", (user_id, parent['id_achievement'])).fetchone()
+        cursor.execute("SELECT * FROM done WHERE id_user = %s AND id_achievement = %s", (user_id, parent['id_achievement']))
+        done = cursor.fetchone()
         if all_childs_completed: # add
             allowed = done is None or done is not None and int(done['complete']) == 0
         else: # remove
@@ -204,20 +223,21 @@ def save_score(action, user_id, ach, allowed=True):
 
 def read_achievements(parent_id=None):
     data = []
-    base = db.get_db()
+    connection, cursor = db.get_db()
     query = "SELECT * FROM achievement WHERE parent_id "
     query += "is null" if parent_id is None else f"= {parent_id}"
     all_complete = True
-    for elem in base.execute(query).fetchall():
+    cursor.execute(query)
+    for elem in cursor.fetchall():
         
         childs, all_childs_complete = read_achievements(elem['id_achievement'])
         all_complete = all_complete and all_childs_complete
         
         auto_complete = bool(elem['auto_complete'])
         complete = False
-        if g.user: 
-            user_complete = base.execute("SELECT * FROM done WHERE complete = 1 AND id_user = ? AND id_achievement = ?", 
-                                        (g.user['id_user'], elem['id_achievement'],)).fetchone() is not None
+        if g.user:
+            cursor.execute("SELECT * FROM done WHERE complete = 1 AND id_user = %s AND id_achievement = %s", (g.user['id_user'], elem['id_achievement'],))
+            user_complete = cursor.fetchone() is not None
             if not user_complete: all_complete = False
             complete = all_childs_complete if auto_complete else user_complete
         else: all_complete = False

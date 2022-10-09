@@ -14,27 +14,31 @@ def user():
         user_id = request.args.get('id')
         if user_id is None: return response()
             
-        base = get_db()
+        connection, cursor = get_db()
         
-        u = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE id_user = ?", (user_id,)).fetchone()
+        cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE id_user = %s", (user_id,))
+        u = cursor.fetchone()
         if u is None: return response()
         
-        req = base.execute("SELECT difficulty, count(difficulty) AS amount " + \
+        cursor.execute("SELECT difficulty, count(difficulty) AS amount " + \
                         "FROM done JOIN achievement USING(id_achievement) " + \
                         "WHERE id_user = ? AND complete = 1 GROUP BY difficulty " + \
                         "ORDER BY difficulty", (user_id,))
         difficulties = [0]*5
-        for r in req.fetchall():
+        for r in cursor.fetchall():
             difficulties[r['difficulty']-1] = r['amount']
             
-        users = [r['id_user'] for r in base.execute("SELECT * FROM users ORDER BY score DESC").fetchall()]
+        cursor.execute("SELECT * FROM users ORDER BY score DESC")
+        users = [r['id_user'] for r in cursor.fetchall()]
         rank = users.index(int(user_id)) + 1
         
-        year_users = [r['id_user'] for r in base.execute(
+        cursor.execute(
             "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
-            (u['year'],)).fetchall()]
+            (u['year'],))
+        year_users = [r['id_user'] for r in cursor.fetchall()]
         year_rank = year_users.index(int(user_id)) + 1
         
+        cursor.execute("SELECT id_achievement FROM done WHERE id_user = %s and complete = 1", (user_id,))
         ret = {
             "id_user"                : u['id_user'],        
             "firstname"              : u['firstname'],
@@ -50,7 +54,7 @@ def user():
             "global_rank"            : rank,
             "year_rank"              : year_rank,
             "completed_achievements" : [
-                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM done WHERE id_user = ? and complete = 1", (user_id,)).fetchall()
+                r['id_achievement'] for r in cursor.fetchall()
             ]
         }
         return response(ret)
@@ -62,11 +66,13 @@ def achievement():
         ach_id = request.args.get('id')
         if ach_id is None: return response()
             
-        base = get_db()
+        connection, cursor = get_db()
         
-        a = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach_id,)).fetchone()
+        cursor.execute("SELECT * FROM achievement WHERE id_achievement = %s", (ach_id,))
+        a = cursor.fetchone()
         if a is None: return response()
         
+        cursor.execute("SELECT id_achievement FROM achievement WHERE parent_id = %s", (a['id_achievement'],))
         ret = {
             "id_achievement" : a['id_achievement'],
             "name"           : a['name'],
@@ -74,7 +80,7 @@ def achievement():
             "difficulty"     : a['difficulty'],
             "auto_complete"  : a['auto_complete'],
             "childs"         : [
-                r['id_achievement'] for r in base.execute("SELECT id_achievement FROM achievement WHERE parent_id = ?", (a['id_achievement'],)).fetchall()
+                r['id_achievement'] for r in cursor.fetchall()
             ]
         }
         return response(ret)
@@ -85,13 +91,15 @@ def leaderboard():
     try:
         year = request.args.get('year')
         
-        base = get_db()
+        connection, cursor = get_db()
         
         leaderboard = None
         if year is None:
-            leaderboard = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) ORDER BY score DESC").fetchall()
+            cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) ORDER BY score DESC")
+            leaderboard = cursor.fetchall()
         else:
-            leaderboard = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC", (year,)).fetchall()
+            cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = %s ORDER BY score DESC", (year,))
+            leaderboard = cursor.fetchall()
         if leaderboard is None: return response()
         
         ret = {
