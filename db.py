@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
@@ -45,7 +46,7 @@ def get_db():
             password=PASSWORD
         )
         g.connection = connection
-        g.cursor = connection.cursor()
+        g.cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         g.db_connected = True
     return g.connection, g.cursor
 
