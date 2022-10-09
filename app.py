@@ -10,7 +10,7 @@ import api
 import admin
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('dev.config.ini')
 
 app = Flask(__name__, instance_relative_config = True)
 app.config.from_mapping(
@@ -24,6 +24,7 @@ app.register_blueprint(admin.bp)
 auth.init_config(config)
 admin.init_config(config)
 db.init_app(app)
+db.init_config(config)
 
 # @app.before_request
 # def limit_remote_addr():

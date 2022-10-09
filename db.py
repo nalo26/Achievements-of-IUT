@@ -3,9 +3,23 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+HOST = ""
+DATABASE = ""
+USERNAME = ""
+PASSWORD = ""
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+def init_config(config):
+    global HOST, DATABASE, USERNAME, PASSWORD
+    HOST = config['Database']['host']
+    DATABASE = config['Database']['base']
+    USERNAME = config['Database']['user']
+    PASSWORD = config['Database']['pass']
+
 
 def init_db():
     db = get_db()
