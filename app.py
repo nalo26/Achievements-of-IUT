@@ -112,7 +112,7 @@ def profile(user_id):
     if user is None: abort(404, f"No user with ID {user_id} was found.")
 
     datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
-    cursor.execute("SELECT * FROM done WHERE complete = 1 AND id_user = %s", (user_id,))
+    cursor.execute("SELECT * FROM done WHERE complete = TRUE AND id_user = %s", (user_id,))
     ach_complete = len(cursor.fetchall())
     cursor.execute("SELECT * FROM achievement")
     ach_amount = len(cursor.fetchall())
@@ -130,7 +130,7 @@ def profile(user_id):
     
     cursor.execute("SELECT difficulty, count(difficulty) AS amount " + \
                        "FROM done JOIN achievement USING(id_achievement) " + \
-                       "WHERE complete = 1 AND id_user = ? GROUP BY difficulty " + \
+                       "WHERE complete = TRUE AND id_user = %s GROUP BY difficulty " + \
                        "ORDER BY difficulty", (user_id,))
     difficulties = [0]*5
     for r in cursor.fetchall():
@@ -150,38 +150,38 @@ def statistics():
     _, cursor = db.get_db()
     stats = []
 
-    cursor.execute("SELECT COUNT(id_user) data FROM users")
+    cursor.execute("SELECT COUNT(id_user) AS data FROM users")
     a = cursor.fetchone()['data']
-    cursor.execute("SELECT COUNT(id_user) data FROM discord_user")
+    cursor.execute("SELECT COUNT(id_user) AS data FROM discord_user")
     s = cursor.fetchone()['data']
     stats.append(("Nombre de participants", f"{a} / {s}"))
 
 
-    cursor.execute("SELECT AVG(score) data FROM users")
+    cursor.execute("SELECT AVG(score) AS data FROM users")
     a = cursor.fetchone()['data']
-    cursor.execute("SELECT SUM(difficulty) data FROM achievement")
+    cursor.execute("SELECT SUM(difficulty) AS data FROM achievement")
     s = cursor.fetchone()['data']
     stats.append(("Score moyen", f"{round(a)} / {s}"))
 
-    cursor.execute("SELECT SUM(score) data FROM users")
+    cursor.execute("SELECT SUM(score) AS data FROM users")
     res = cursor.fetchone()['data']
     stats.append(("Score cumulé", res))
 
-    cursor.execute("SELECT AVG(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)")
+    cursor.execute("SELECT AVG(c) AS data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = TRUE GROUP BY id_user) d")
     a = cursor.fetchone()['data']
-    cursor.execute("SELECT COUNT(id_achievement) data FROM achievement")
+    cursor.execute("SELECT COUNT(id_achievement) AS data FROM achievement")
     s = cursor.fetchone()['data']
     stats.append(("Nombre moyen d'achievements réalisés", f"{round(a)} / {s}"))
 
-    cursor.execute("SELECT SUM(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)")
+    cursor.execute("SELECT SUM(c) AS data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = TRUE GROUP BY id_user) d")
     res = cursor.fetchone()['data']
     stats.append(("Nombre cumulé d'achievements réalisés", res))
 
-    cursor.execute("SELECT year, AVG(score) avg_score FROM users JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score")
+    cursor.execute("SELECT year, AVG(score) AS avg_score FROM users JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score")
     res = cursor.fetchall()
     stats.append(("Meilleure promo (score moyen)", f"{res[-1]['year']} ({round(res[-1]['avg_score'])} pts)"))
 
-    cursor.execute("SELECT id_achievement id, COUNT(id_achievement) c FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 GROUP BY id_achievement ORDER BY c DESC")
+    cursor.execute("SELECT id_achievement AS id, COUNT(id_achievement) AS c FROM done JOIN achievement USING(id_achievement) WHERE complete = TRUE GROUP BY id_achievement ORDER BY c DESC")
     res = cursor.fetchone()
     stats.append(("Achievement le plus réalisé", f"x {res['c']}"))
 
@@ -201,11 +201,11 @@ def save_score(action, user_id, ach, allowed=True):
             cursor.execute("INSERT INTO done  (id_user, id_achievement) VALUES (%s, %s)", (user_id, ach_id,))
             cursor.execute("INSERT INTO event_save_score (id_user, id_achievement) VALUES (%s, %s)", (user_id, ach_id,))
         else:
-            cursor.execute("UPDATE done SET complete = 1 where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
-        cursor.execute("UPDATE user SET score = score + %s WHERE id_user = %s", (ach['difficulty'], user_id,))
+            cursor.execute("UPDATE done SET complete = TRUE where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
+        cursor.execute("UPDATE users SET score = score + %s WHERE id_user = %s", (ach['difficulty'], user_id,))
         connection.commit()
     if action == "remove" and allowed:
-        cursor.execute("UPDATE done SET complete = 0 where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
+        cursor.execute("UPDATE done SET complete = FALSE where id_user = %s AND id_achievement = %s", (user_id, ach_id,))
         cursor.execute("UPDATE users SET score = score - %s WHERE id_user = %s", (ach['difficulty'], user_id,))
         connection.commit()
         
@@ -236,7 +236,7 @@ def read_achievements(parent_id=None):
         auto_complete = bool(elem['auto_complete'])
         complete = False
         if g.user:
-            cursor.execute("SELECT * FROM done WHERE complete = 1 AND id_user = %s AND id_achievement = %s", (g.user['id_user'], elem['id_achievement'],))
+            cursor.execute("SELECT * FROM done WHERE complete = TRUE AND id_user = %s AND id_achievement = %s", (g.user['id_user'], elem['id_achievement'],))
             user_complete = cursor.fetchone() is not None
             if not user_complete: all_complete = False
             complete = all_childs_complete if auto_complete else user_complete
@@ -256,4 +256,4 @@ def read_achievements(parent_id=None):
     
 
 if __name__ == '__main__':
-    app.run(debug=True, host=config['Flask']['host'], port=config['Flask']['port'])
+    app.run(debug=False, host=config['Flask']['host'], port=config['Flask']['port'])

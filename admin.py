@@ -41,7 +41,7 @@ def manage_users():
                 user = cursor.fetchone()
             last_u_id = u_id
             if str(user[k]) == str(value): continue
-            cursor.execute(f"UPDATE discord_user SET {k} = ? WHERE id_user = ?", (value, u_id,))
+            cursor.execute(f"UPDATE discord_user SET {k} = %s WHERE id_user = %s", (value, u_id,))
         connection.commit()
         
     cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user)")
@@ -63,11 +63,11 @@ def manage_achievements():
                 ach = cursor.fetchone()
             last_a_id = a_id
             if str(ach[k]) == str(value): continue
-            cursor.execute(f"UPDATE achievement SET {k} = ? WHERE id_achievement = ?", (value, a_id,))
+            cursor.execute(f"UPDATE achievement SET {k} = %s WHERE id_achievement = %s", (value, a_id,))
             if k == 'difficulty':
                 cursor.execute(
                     f"UPDATE users SET score = score-{ach['difficulty']}+{value} WHERE id_user in (" + \
-                    "SELECT id_user FROM done WHERE complete = 1 AND id_achievement = ?" + \
+                    "SELECT id_user FROM done WHERE complete = TRUE AND id_achievement = %s" + \
                     ")", (a_id,)
                 )
         connection.commit()
@@ -94,7 +94,7 @@ def create_achievement(parent_id):
         data = request.form.to_dict(False)
         auto = bool(request.form.get('auto') is not None) 
         cursor.execute("INSERT INTO achievement (name, lore, difficulty, parent_id, auto_complete)" +\
-                     "VALUES (?, ?, ?, ?, ?)",
+                     "VALUES (%s, %s, %s, %s, %s)",
                      (request.form['name'], request.form['lore'], request.form['difficulty'], parent_id, auto,))
         connection.commit()
         cursor.execute("SELECT id_achievement FROM achievement WHERE name = %s AND lore = %s",
@@ -136,8 +136,8 @@ def delete_achievement(ach_id, dif):
         delete_achievement(child['id_achievement'], child['difficulty'])
     
     cursor.execute(
-        f"UPDATE user SET score = score-{dif} WHERE id_user in (" + \
-        "SELECT id_user FROM done WHERE complete = 1 AND id_achievement = ?" + \
+        f"UPDATE users SET score = score-{dif} WHERE id_user in (" + \
+        "SELECT id_user FROM done WHERE complete = TRUE AND id_achievement = %s" + \
         ")", (ach_id,)
     )
     cursor.execute("DELETE FROM done WHERE id_achievement = %s", (ach_id,))

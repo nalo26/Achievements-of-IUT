@@ -22,7 +22,7 @@ def user():
         
         cursor.execute("SELECT difficulty, count(difficulty) AS amount " + \
                         "FROM done JOIN achievement USING(id_achievement) " + \
-                        "WHERE id_user = ? AND complete = 1 GROUP BY difficulty " + \
+                        "WHERE id_user = %s AND complete = TRUE GROUP BY difficulty " + \
                         "ORDER BY difficulty", (user_id,))
         difficulties = [0]*5
         for r in cursor.fetchall():
@@ -33,12 +33,12 @@ def user():
         rank = users.index(int(user_id)) + 1
         
         cursor.execute(
-            "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
+            "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = %s ORDER BY score DESC",
             (u['year'],))
         year_users = [r['id_user'] for r in cursor.fetchall()]
         year_rank = year_users.index(int(user_id)) + 1
         
-        cursor.execute("SELECT id_achievement FROM done WHERE id_user = %s and complete = 1", (user_id,))
+        cursor.execute("SELECT id_achievement FROM done WHERE id_user = %s and complete = TRUE", (user_id,))
         ret = {
             "id_user"                : u['id_user'],        
             "firstname"              : u['firstname'],

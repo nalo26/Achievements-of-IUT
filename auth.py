@@ -45,7 +45,7 @@ def oauth_callback():
             cursor.execute("SELECT * FROM discord_user WHERE id_user = %s", (discord_user['id'],))
             if cursor.fetchone() is None:
                 return "Please make sure to join the discord server before registering."
-            cursor.execute('INSERT INTO users (id_user) VALUES (?)', (discord_user['id'],))
+            cursor.execute('INSERT INTO users (id_user) VALUES (%s)', (discord_user['id'],))
             connection.commit()
         # login
         cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = %s",(discord_user['id'],))
@@ -108,7 +108,7 @@ def get_discord_user(token):
 def get_db_user_by_id(user_id):
     _, cursor = get_db()
     cursor.execute(
-        "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)
+        "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = %s", (user_id,)
     )
     return cursor.fetchone()
 
