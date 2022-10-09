@@ -39,14 +39,14 @@ def oauth_callback():
         session['discord_token'] = token
         discord_user = get_discord_user(token)
         db = get_db()
-        user = db.execute("SELECT * FROM user WHERE id_user = ?", (discord_user['id'],)).fetchone()
+        user = db.execute("SELECT * FROM users WHERE id_user = ?", (discord_user['id'],)).fetchone()
         if user is None: # register
             if db.execute("SELECT * FROM discord_user WHERE id_user = ?", (discord_user['id'],)).fetchone() is None:
                 return "Please make sure to join the discord server before registering."
-            db.execute('INSERT INTO user (id_user) VALUES (?)', (discord_user['id'],))
+            db.execute('INSERT INTO users (id_user) VALUES (?)', (discord_user['id'],))
             db.commit()
         # login
-        g.user = db.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
+        g.user = db.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?",
                             (discord_user['id'],)).fetchone()
         return redirect(get_last_page())
     except Exception as e:
@@ -102,7 +102,7 @@ def get_discord_user(token):
 
 def get_db_user_by_id(user_id):
     return get_db().execute(
-        "SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)
+        "SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)
     ).fetchone()
 
 

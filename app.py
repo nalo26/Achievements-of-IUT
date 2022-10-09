@@ -90,10 +90,10 @@ def leaderboard(year):
     
     if year is None:
         session['page'] = "/leaderboard"
-        users = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) ORDER BY score DESC").fetchall()
+        users = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) ORDER BY score DESC").fetchall()
     else:
         session['page'] = f"/leaderboard/{year}"
-        users = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
+        users = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE year = ? ORDER BY score DESC",
                              (year,)).fetchall()
         
     return render_template('leaderboard.html', users=users, year=year, maxyear=maxyear,
@@ -104,18 +104,18 @@ def leaderboard(year):
 def profile(user_id):
     session['page'] = f"/profile/{user_id}"
     base = db.get_db()
-    user = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)).fetchone()
+    user = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE u.id_user = ?", (user_id,)).fetchone()
     if user is None: abort(404, f"No user with ID {user_id} was found.")
 
     datejoin = datetime.strptime(user['joindate'], "%Y-%m-%d %H:%M:%S")
     ach_complete = len(base.execute("SELECT * FROM done WHERE complete = 1 AND id_user = ?", (user_id,)).fetchall())
     ach_amount = len(base.execute("SELECT * FROM achievement").fetchall())
     
-    users = [r['id_user'] for r in base.execute("SELECT * FROM user ORDER BY score DESC").fetchall()]
+    users = [r['id_user'] for r in base.execute("SELECT * FROM users ORDER BY score DESC").fetchall()]
     rank = users.index(user_id) + 1
     
     year_users = [r['id_user'] for r in base.execute(
-        "SELECT id_user FROM user JOIN discord_user USING(id_user) WHERE year = ? ORDER BY score DESC", (user['year'],)
+        "SELECT id_user FROM users JOIN discord_user USING(id_user) WHERE year = ? ORDER BY score DESC", (user['year'],)
         ).fetchall()
     ]
     year_rank = year_users.index(user_id) + 1
@@ -144,16 +144,16 @@ def statistics():
     base = db.get_db()
     stats = []
 
-    a = base.execute("SELECT COUNT(id_user) data FROM user").fetchone()['data']
+    a = base.execute("SELECT COUNT(id_user) data FROM users").fetchone()['data']
     s = base.execute("SELECT COUNT(id_user) data FROM discord_user").fetchone()['data']
     stats.append(("Nombre de participants", f"{a} / {s}"))
 
 
-    a = base.execute("SELECT AVG(score) data FROM user").fetchone()['data']
+    a = base.execute("SELECT AVG(score) data FROM users").fetchone()['data']
     s = base.execute("SELECT SUM(difficulty) data FROM achievement").fetchone()['data']
     stats.append(("Score moyen", f"{round(a)} / {s}"))
 
-    res = base.execute("SELECT SUM(score) data FROM user").fetchone()['data']
+    res = base.execute("SELECT SUM(score) data FROM users").fetchone()['data']
     stats.append(("Score cumulé", res))
 
     a = base.execute("SELECT AVG(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
@@ -163,7 +163,7 @@ def statistics():
     res = base.execute("SELECT SUM(c) data FROM (SELECT COUNT(id_achievement) AS c FROM done WHERE complete = 1 GROUP BY id_user)").fetchone()['data']
     stats.append(("Nombre cumulé d'achievements réalisés", res))
 
-    res = base.execute("SELECT year, AVG(score) avg_score FROM user JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score").fetchall()
+    res = base.execute("SELECT year, AVG(score) avg_score FROM users JOIN discord_user USING(id_user) GROUP BY year ORDER BY avg_score").fetchall()
     stats.append(("Meilleure promo (score moyen)", f"{res[-1]['year']} ({round(res[-1]['avg_score'])} pts)"))
 
     res = base.execute("SELECT id_achievement id, COUNT(id_achievement) c FROM done JOIN achievement USING(id_achievement) WHERE complete = 1 GROUP BY id_achievement ORDER BY c DESC").fetchone()
@@ -188,7 +188,7 @@ def save_score(action, user_id, ach, allowed=True):
         base.commit()
     if action == "remove" and allowed:
         base.execute("UPDATE done SET complete = 0 where id_user = ? AND id_achievement = ?", (user_id, ach_id,))
-        base.execute("UPDATE user SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
+        base.execute("UPDATE users SET score = score - ? WHERE id_user = ?", (ach['difficulty'], user_id,))
         base.commit()
         
     parent = base.execute("SELECT * FROM achievement WHERE id_achievement = ?", (ach['parent_id'],)).fetchone()

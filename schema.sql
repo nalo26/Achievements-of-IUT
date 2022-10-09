@@ -12,7 +12,7 @@ CREATE TABLE discord_user (
    avatar TEXT NOT NULL
 );
 
-CREATE TABLE user (
+CREATE TABLE users (
    id_user INTEGER PRIMARY KEY,
    joindate DATETIME DEFAULT CURRENT_TIMESTAMP,
    score INTEGER DEFAULT 0,

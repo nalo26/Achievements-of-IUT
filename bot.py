@@ -58,7 +58,7 @@ async def roles(ctx):
     db = get_db()
     role = ctx.guild.get_role(ping_role_id)
 
-    for u in db.execute("SELECT * FROM user").fetchall():
+    for u in db.execute("SELECT * FROM users").fetchall():
         await ctx.guild.get_member(u['id_user']).add_roles(role)
 
 @client.command(aliases=['syncro'])

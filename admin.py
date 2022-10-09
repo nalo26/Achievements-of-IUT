@@ -43,7 +43,7 @@ def manage_users():
             base.execute(f"UPDATE discord_user SET {k} = ? WHERE id_user = ?", (value, u_id,))
         base.commit()
         
-    users = base.execute("SELECT * FROM user u JOIN discord_user d USING(id_user)").fetchall()
+    users = base.execute("SELECT * FROM users u JOIN discord_user d USING(id_user)").fetchall()
     return render_template("admin/users_manage.html", users=users, admin_id=admin_id)
 
 @bp.route('/achievements', methods=('GET', 'POST'))
@@ -63,7 +63,7 @@ def manage_achievements():
             base.execute(f"UPDATE achievement SET {k} = ? WHERE id_achievement = ?", (value, a_id,))
             if k == 'difficulty':
                 base.execute(
-                    f"UPDATE user SET score = score-{ach['difficulty']}+{value} WHERE id_user in (" + \
+                    f"UPDATE users SET score = score-{ach['difficulty']}+{value} WHERE id_user in (" + \
                     "SELECT id_user FROM done WHERE complete = 1 AND id_achievement = ?" + \
                     ")", (a_id,)
                 )
