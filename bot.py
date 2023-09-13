@@ -91,18 +91,23 @@ async def sync(ctx, member:discord.Member = None, feedback = True):
         if feedback: await ctx.send(f":white_check_mark: Successfully synchronized `{fn} {ln} [{year}]`.")
         return
     
-    cursor.execute("DELETE FROM discord_user")
-    count = 0
+    added, edited = 0, 0
     for m in guild.members:
         try: m_id, fn, ln, year, av = get_user_info(m)
         except ValueError: continue
-        cursor.execute("INSERT INTO discord_user (id_user, firstname, lastname, year, avatar) VALUES (%s, %s, %s, %s, %s)",
-                   (m_id, fn, ln, year, av,))
-        count += 1
+        cursor.execute("SELECT * FROM discord_user WHERE id_user = %s", (m_id,))
+        user = cursor.fetchone()
+        if user is not None: 
+            cursor.execute("UPDATE discord_user SET firstname = %s, lastname = %s, year = %s, avatar = %s WHERE id_user = %s",
+                       (fn, ln, year, av, m_id,))
+            edited += 1
+        else:
+            cursor.execute("INSERT INTO discord_user VALUES (%s, %s, %s, %s, %s)", (m_id, fn, ln, year, av,))
+            added += 1
     connection.commit()
     if feedback:
-        if count == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
-        else: await ctx.send(f":white_check_mark: Successfully synchronized `{count}` member{'s' if count > 1 else ''}.")
+        if added == edited == 0: await ctx.send(":x: Something went wrong, `0` member synchronized.")
+        else: await ctx.send(f":white_check_mark: Successfully added `{added}` member(s) and edited `{edited}` member(s).")
     
 @client.command(aliases=['profil', 'me'])
 async def profile(ctx, member:discord.Member = None):
