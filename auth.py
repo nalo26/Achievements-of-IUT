@@ -12,7 +12,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 base_discord_api_url = 'https://discordapp.com/api'
 client_id = ""
 client_secret = ""
-redirect_uri = ""
+redirect_url = ""
 scope = ['identify', 'guilds']
 token_url = 'https://discordapp.com/api/oauth2/token'
 authorize_url = 'https://discordapp.com/api/oauth2/authorize'
@@ -20,17 +20,17 @@ guild_id = ""
 
 
 def init_config(config):
-    global client_id, client_secret, redirect_uri, guild_id
+    global client_id, client_secret, redirect_url, guild_id
     client_id = config['DiscordApp']['client_id']
     client_secret = config['DiscordApp']['client_secret']
-    redirect_uri = config['DiscordApp']['base_uri'] + config['DiscordApp']['redirect_uri']
+    redirect_url = config['DiscordApp']['base_url'] + config['DiscordApp']['redirect_uri']
     guild_id = config['DiscordBot']['guild_id']
 
 
 @bp.route('/login_success')
 def oauth_callback():
     try:
-        discord = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
+        discord = OAuth2Session(client_id, redirect_uri=redirect_url, state=session['state'], scope=scope)
         token = discord.fetch_token(
             token_url,
             client_secret=client_secret,
@@ -114,7 +114,7 @@ def get_db_user_by_id(user_id):
 
 
 def get_login_url():
-    oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
+    oauth = OAuth2Session(client_id, redirect_uri=redirect_url, scope=scope)
     login_url, state = oauth.authorization_url(authorize_url)
     session['state'] = state
     return login_url

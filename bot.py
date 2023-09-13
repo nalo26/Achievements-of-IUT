@@ -30,8 +30,8 @@ ping_role_id = int(config['DiscordBot']['ping_role_id'])
 guild = None
 channel = None
 
-base_uri = config['DiscordApp']['base_uri']
-api_uri = base_uri + config['DiscordApp']['api_uri']
+base_url = config['DiscordApp']['base_url']
+api_url = config['DiscordApp']['api_url']
 
 @client.event
 async def on_ready():
@@ -112,13 +112,13 @@ async def sync(ctx, member:discord.Member = None, feedback = True):
 @client.command(aliases=['profil', 'me'])
 async def profile(ctx, member:discord.Member = None):
     if member is None: member = ctx.message.author
-    user = rq.get(f"{api_uri}/get_user?id={member.id}").json()
+    user = rq.get(f"{api_url}/get_user?id={member.id}").json()
     if len(user) == 0:
         await ctx.send(f":x: `{member.display_name}` is not registered.")
         return
     
     embed = discord.Embed(title=f"Profil de {user.get('firstname')} {user.get('lastname')} [{user.get('promotion_year')}]",
-                          url=f"{base_uri}/profile/{user.get('id_user')}")
+                          url=f"{base_url}/profile/{user.get('id_user')}")
     embed.set_thumbnail(url=str(member.avatar_url))
     content  = f":bar_chart: __Score total : **{user.get('score')}pts**__\n"
     content += f":medal: Classement général : **#{user.get('global_rank')}**\n"
@@ -140,7 +140,7 @@ async def profile(ctx, member:discord.Member = None):
 
 @client.command(aliases=['classement', 'top', 'lead'])
 async def leaderboard(ctx, year=None):
-    leaderboard = rq.get(f"{api_uri}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
+    leaderboard = rq.get(f"{api_url}/get_leaderboard{f'?year={year}' if year is not None else ''}").json()
     if len(leaderboard) == 0:
         await ctx.send(f":x: `{year}` is not a valid year.")
         return
@@ -149,9 +149,9 @@ async def leaderboard(ctx, year=None):
     last = -1
     
     if leaderboard.get('year') == 0:
-        embed = discord.Embed(title=":trophy: Classement général", url=f"{base_uri}/leaderboard")
+        embed = discord.Embed(title=":trophy: Classement général", url=f"{base_url}/leaderboard")
     else:
-        embed = discord.Embed(title=f":trophy: Classement promo {leaderboard.get('year')}", url=f"{base_uri}/leaderboard/{year}")
+        embed = discord.Embed(title=f":trophy: Classement promo {leaderboard.get('year')}", url=f"{base_url}/leaderboard/{year}")
     content = ""
     for i, user in enumerate(leaderboard.get('users')[:20]):
         score = user.get('score')
@@ -224,12 +224,12 @@ def embed_new_ach(event):
 
 
 def embed_save_score(event):
-    user = rq.get(f"{api_uri}/get_user?id={event['id_user']}").json()
-    ach  = rq.get(f"{api_uri}/get_achievement?id={event['id_achievement']}").json()
+    user = rq.get(f"{api_url}/get_user?id={event['id_user']}").json()
+    ach  = rq.get(f"{api_url}/get_achievement?id={event['id_achievement']}").json()
     embed = discord.Embed(title=ach.get('name'), color=DIFFICULTIES[ach.get('difficulty')-1])
     embed.set_author(
         name=f"par {user.get('firstname')} {user.get('lastname')}",
-        url=f"{base_uri}/profile/{user.get('id_user')}",
+        url=f"{base_url}/profile/{user.get('id_user')}",
         icon_url=guild.get_member(user.get('id_user')).avatar_url
     )
     embed.description = ach.get('lore').replace('<br>', '\n')
