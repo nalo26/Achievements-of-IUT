@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 import asyncio
 import requests as rq
-from datetime import datetime
+import datetime
 from dateutil import parser
 
 config = configparser.ConfigParser()
@@ -245,7 +245,10 @@ async def background_task():
     guild = client.get_guild(guild_ids)
     channel = guild.get_channel(channel_id)
     connection, cursor = get_db()
-    
+
+    timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
+    cursor.execute(f"SET TIME ZONE {timezone};")
+
     while not client.is_closed():
         cursor.execute("SELECT * FROM event_new_ach ORDER BY id_event")
         events_new_ach = cursor.fetchall()

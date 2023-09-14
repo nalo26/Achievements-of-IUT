@@ -1,4 +1,5 @@
 from flask import Blueprint, request, redirect
+import datetime
 
 from db import get_db
 
@@ -15,6 +16,9 @@ def user():
         if user_id is None: return response()
             
         connection, cursor = get_db()
+
+        timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
+        cursor.execute(f"SET TIME ZONE {timezone};")
         
         cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE id_user = %s", (user_id,))
         u = cursor.fetchone()
