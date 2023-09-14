@@ -246,8 +246,7 @@ async def background_task():
     channel = guild.get_channel(channel_id)
     connection, cursor = get_db()
 
-    timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
-    cursor.execute(f"SET TIME ZONE {timezone};")
+    cursor.execute(f"SET TIME ZONE 'Europe/Paris';")
 
     while not client.is_closed():
         cursor.execute("SELECT * FROM event_new_ach ORDER BY id_event")

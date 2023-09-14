@@ -17,8 +17,7 @@ def user():
             
         connection, cursor = get_db()
 
-        timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
-        cursor.execute(f"SET TIME ZONE {timezone};")
+        cursor.execute(f"SET TIME ZONE 'Europe/Paris';")
         
         cursor.execute("SELECT * FROM users u JOIN discord_user d USING(id_user) WHERE id_user = %s", (user_id,))
         u = cursor.fetchone()
