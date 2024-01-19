@@ -1,5 +1,5 @@
 from sqlite3.dbapi2 import OperationalError, IntegrityError
-from flask import Flask, redirect, render_template, session, g, request, abort
+from flask import Flask, redirect, render_template, session, g, request, abort, url_for
 import os
 import configparser
 from datetime import datetime
@@ -30,6 +30,11 @@ db.init_config(config)
 # def limit_remote_addr():
 #     if request.remote_addr != config['Flask']['authorized']:
 #         abort(403, "Site en maintenance !")
+
+@app.route("/favicon.ico")
+@app.route("/robots.txt")
+def static_from_root():
+    return redirect(url_for("static", filename=request.path[1:]))
 
 @app.route('/')
 @app.route('/achievement')
